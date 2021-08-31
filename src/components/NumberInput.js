@@ -2,58 +2,54 @@ import React from 'react';
 
 import colors from "../config/colors";
 
+import TextElement from "./TextElement";
+import Button from "./Button";
+
 export default function NumberInput(props) {
 	return (
 		<div style={styles.container}>
 			<label style={styles.label}>
 				{props.title}:
 			</label>
-			<button style={styles.button}>
-				-
-			</button>
-			<input
-				className={props.title.toLowerCase()}
-				type="number"
-				style={styles.input}
-				value={props.value}
-				onChange={props.onChange}
-				min={1}
-				max={props.max}
-				disabled
-			/>
-			<button style={styles.button}>
-				+
-			</button>
+			<div style={styles.adjuster}>
+				<Button
+					value="-"
+					onClick={() => {props.onClick(props.value-1)}}
+					style={styles.button}
+				/>
+				<TextElement
+					value={props.value}
+					style={styles.text}
+					disabled
+				/>
+				<Button
+					value="+"
+					onClick={() => {props.onClick(props.value+1)}}
+					style={styles.button}
+				/>
+			</div>
 		</div>
 	);
 }
 
 const styles = {
+	adjuster: {
+		flex: 1,
+		display: "flex",
+	},
 	button: {
-		backgroundColor: colors.transparent,
-		color: colors.white,
-		fontWeight: "bold",
-		height: "100%",
-		border: "1px solid "+colors.white,
+		flex: 1,
 	},
 	container: {
 		flex: 1,
 		display: "flex",
 		alignItems: "center",
 	},
-	input: {
-		// flex: 2,
-		backgroundColor: colors.transparent,
-		color: colors.white,
-		height: "100%",
-		boxSizing: "border-box",
-		border: "1px solid "+colors.white,
-		textAlign: "center",
-		fontSize: "5vh",
-	},
 	label: {
-		flex: 1,
+		flex: 2,
 		color: colors.white,
-		fontSize: "5vh",
 	},
+	text: {
+		flex: 2,
+	}
 };

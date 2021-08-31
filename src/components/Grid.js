@@ -26,7 +26,7 @@ export default function Grid(props) {
 	);
 	
 	return (
-		<div style={styles.container}>
+		<div id={props.id} style={Object.assign([], styles.container, {display: props.display})}>
 			{iconButtons.map((row, i) => {
 				return(
 					<Row key={i} id={i} numOfCols={props.numOfCols} row={row} size={buttonDim}/>
@@ -39,7 +39,6 @@ export default function Grid(props) {
 const styles = {
 	container: {
 		flex: 1,
-		display: "flex",
 		flexDirection: "column",
 		justifyContent: "space-evenly",
 	},

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import colors from "../config/colors";
+import constants from "../config/constants";
 
 export default function IconButton(props) {
 	const handlePress = () => {
@@ -34,7 +35,7 @@ const styles = {
 	button: {
 		flex: 1,
 		backgroundColor: colors.primary,
-		borderRadius: "20%",
+		borderRadius: constants.buttonRadius,
 		padding: "5%",
 		display: "flex",
 	},

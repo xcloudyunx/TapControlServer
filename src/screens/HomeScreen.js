@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import colors from "../config/colors";
 import constants from "../config/constants";
 
-import Grid from "../components/Grid";
+import MainBar from "../components/MainBar";
 import SideBar from "../components/SideBar";
 
 export default function HomeScreen() {
@@ -11,21 +11,16 @@ export default function HomeScreen() {
 	const [numOfCols, setNumOfCols] = useState(2);
 	const [numOfPages, setNumOfPages] = useState(1);
 	
-	const handleChange = (event) => {
-		let value = parseInt(event.target.value);
-		if (isNaN(value)) {
-			value = 1;
-		} else {
-			value = Math.max(1, value);
-		}
-		switch (event.target.className) {
-			case "rows":
+	const handleClick = (type, val) => {
+		const value = Math.max(val, 1);
+		switch (type) {
+			case "row":
 				setNumOfRows(Math.min(constants.rowMax, value));
 				break;
-			case "columns":
+			case "col":
 				setNumOfCols(Math.min(constants.colMax, value));
 				break;
-			case "pages":
+			case "page":
 				setNumOfPages(Math.min(constants.pageMax, value));
 				break;
 			default:
@@ -35,8 +30,17 @@ export default function HomeScreen() {
 	
 	return (
 		<div style={styles.background}>
-			<Grid numOfRows={numOfRows} numOfCols={numOfCols}/>
-			<SideBar numOfRows={numOfRows} numOfCols={numOfCols} numOfPages={numOfPages}onChange={handleChange}/>
+			<MainBar
+				numOfRows={numOfRows}
+				numOfCols={numOfCols}
+				numOfPages={numOfPages}
+			/>
+			<SideBar
+				numOfRows={numOfRows}
+				numOfCols={numOfCols}
+				numOfPages={numOfPages}
+				onClick={(type, val) => {handleClick(type, val)}}
+			/>
 		</div>
 	);
 };

@@ -8,7 +8,11 @@ export default function SideBar(props) {
 	return (
 		<div style={styles.container}>
 			<div style={{flex:5}}/>
-			<ButtonNumbers numOfRows={props.numOfRows} numOfCols={props.numOfCols} numOfPages={props.numOfPages} onChange={props.onChange}/>
+			<ButtonNumbers
+				numOfRows={props.numOfRows}
+				numOfCols={props.numOfCols}
+				numOfPages={props.numOfPages}
+				onClick={(type, val) => {props.onClick(type, val)}}/>
 		</div>
 	);
 }

@@ -8,9 +8,9 @@ import NumberInput from "./NumberInput";
 export default function ButtonNumbers(props) {
 	return (
 		<div style={styles.container}>
-			<NumberInput title="Rows" value={props.numOfRows} max={constants.rowMax} onChange={props.onChange}/>
-			{/*<NumberInput title="Columns" value={props.numOfCols} max={constants.colMax} onChange={props.onChange}/>
-			<NumberInput title="Pages" value={props.numOfPages} max={constants.pageMax} onChange={props.onChange}/>*/}
+			<NumberInput title="Rows" value={props.numOfRows} onClick={(val) => {props.onClick("row", val)}}/>
+			<NumberInput title="Columns" value={props.numOfCols} onClick={(val) => {props.onClick("col", val)}}/>
+			<NumberInput title="Pages" value={props.numOfPages} onClick={(val) => {props.onClick("page", val)}}/>
 		</div>
 	);
 }
@@ -22,5 +22,6 @@ const styles = {
 		flexDirection: "column",
 		padding: "5%",
 		backgroundColor: colors.secondary,
+		borderTop: constants.border,
 	},
 };
