@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 import colors from "../config/colors";
 import constants from "../config/constants";

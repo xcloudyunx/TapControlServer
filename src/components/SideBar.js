@@ -1,18 +1,30 @@
-import React from 'react';
+import React from "react";
 
 import colors from "../config/colors";
 
-import ButtonNumbers from "./ButtonNumbers";
+import GridSettings from "./GridSettings";
+import ConnectionArea from "./ConnectionArea";
+import IconButtonSettings from "./IconButtonSettings";
 
 export default function SideBar(props) {
 	return (
 		<div style={styles.container}>
-			<div style={{flex:5}}/>
-			<ButtonNumbers
+			{props.className ? 
+				<IconButtonSettings
+					className={props.className}
+					id={props.id}
+					onClick={props.onExitClick}
+				/>
+				:
+				<ConnectionArea
+				/>
+			}
+			<GridSettings
 				numOfRows={props.numOfRows}
 				numOfCols={props.numOfCols}
 				numOfPages={props.numOfPages}
-				onClick={(type, val) => {props.onClick(type, val)}}/>
+				onClick={(type, val) => {props.onGridSettingsClick(type, val)}}
+			/>
 		</div>
 	);
 }

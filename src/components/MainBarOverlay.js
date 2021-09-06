@@ -1,7 +1,5 @@
 import React from 'react';
 
-import constants from "../config/constants";
-
 import TextElement from "../components/TextElement";
 import Button from "../components/Button";
 
@@ -11,6 +9,7 @@ export default function MainBarOverlay(props) {
 			<Button
 				value="&lArr;"
 				onClick={() => {props.onClick(props.currentPage-1)}}
+				style={styles.button}
 			/>
 			<TextElement
 				value={props.currentPage}
@@ -19,12 +18,16 @@ export default function MainBarOverlay(props) {
 			<Button
 				value="&rArr;"
 				onClick={() => {props.onClick(props.currentPage+1)}}
+				style={styles.button}
 			/>
 		</div>
 	);
 };
 
 const styles = {
+	button: {
+		visibility: "visible",
+	},
 	container: {
 		width: "100%",
 		height: "100%",
@@ -32,9 +35,11 @@ const styles = {
 		display: "flex",
 		justifyContent: "space-between",
 		alignItems: "center",
+		visibility: "hidden",
 	},
 	text: {
 		paddingBottom: "3%",
 		alignSelf: "flex-end",
-	}
+		visibility: "visible",
+	},
 };

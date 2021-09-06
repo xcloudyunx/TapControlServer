@@ -9,6 +9,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
+    "socket.io": "^4.2.0",
     "web-vitals": "^1.0.1"
   },
   "main": "public/electron.js",
@@ -44,5 +45,9 @@
     "electron": "^13.2.3",
     "electron-is-dev": "^2.0.0",
     "wait-on": "^6.0.0"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.3",
+    "utf-8-validate": "^5.0.5"
   }
 }

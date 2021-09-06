@@ -1,13 +1,9 @@
-import React from 'react';
+import React from "react";
 
 import colors from "../config/colors";
 import constants from "../config/constants";
 
 export default function IconButton(props) {
-	const handlePress = () => {
-		console.log("pressed ", props.id);
-	}
-	
 	return (
 		<div style={{
 			width: props.size,
@@ -15,15 +11,8 @@ export default function IconButton(props) {
 			display: "flex",
 		}}>
 			<button
-				style={Object.assign(
-					{},
-					styles.button,
-					{
-						width: props.size,
-						height: props.size,
-					}
-				)}
-				onClick={handlePress}
+				style={styles.button}
+				onClick={() => props.onClick(props.id)}
 			>
 				<img style={styles.image} src={props.source} alt="icon" />
 			</button>

@@ -5,7 +5,7 @@ import constants from "../config/constants";
 
 import NumberInput from "./NumberInput";
 
-export default function ButtonNumbers(props) {
+export default function GridSettings(props) {
 	return (
 		<div style={styles.container}>
 			<NumberInput title="Rows" value={props.numOfRows} onClick={(val) => {props.onClick("row", val)}}/>
