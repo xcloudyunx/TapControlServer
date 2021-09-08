@@ -83,14 +83,12 @@ class MainFrame(wx.Frame):
 	def handleIconButtonClick(self, page, id):
 		self.buttonClassName = page;
 		self.buttonID = id;
-		print(page, id)
 		self.render()
 		
 	def handlePageChange(self, pageNum):
 		self.currentPage = pageNum%self.numOfPages
 		if self.currentPage == 0:
 			self.currentPage = self.numOfPages
-		print(self.currentPage)
 		self.render()
 	
 	def handleGridSettingsClick(self, type, val):

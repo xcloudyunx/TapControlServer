@@ -26,7 +26,7 @@ class MainBarOverlay(wx.Panel):
 		self.mainBar = MainBar(
 			parent=self
 		)
-		sizer.Add(self.mainBar, wx.SizerFlags(20).Expand())
+		sizer.Add(self.mainBar, wx.SizerFlags(30).Expand())
 		
 		self.txt = TextElement(parent=self, width=3)
 		sizer.Add(self.txt, wx.SizerFlags(1).Centre())

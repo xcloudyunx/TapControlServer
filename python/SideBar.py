@@ -1,5 +1,7 @@
 import wx, wx.adv
 
+import colors
+
 from ConnectionArea import ConnectionArea
 from IconButtonSettings import IconButtonSettings
 from GridSettings import GridSettings
@@ -7,6 +9,8 @@ from GridSettings import GridSettings
 class SideBar(wx.Panel):    
 	def __init__(self, parent, onGridSettingsClick):
 		super().__init__(parent=parent)
+		
+		self.SetBackgroundColour(colors.primary)
 		
 		sizer = wx.BoxSizer(wx.VERTICAL)
 		self.SetSizer(sizer)
