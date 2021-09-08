@@ -5,7 +5,7 @@ import React from "react";
 
 import Button from "./Button";
 
-export default function ButtonSettings(props) {
+export default function IconButtonSettings(props) {
 	return (
 		<div style={styles.container}>
 			<Button

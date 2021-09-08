@@ -9,7 +9,7 @@ export default function Grid(props) {
 	);
 	
 	return (
-		<div id={props.id} style={Object.assign([], styles.container, {display: props.display})}>
+		<div id={props.id} style={styles.container}>
 			{props.iconButtons.map((row, i) => {
 				return(
 					<Row
