@@ -4,7 +4,7 @@ import colors, constants
 
 from MainBar import MainBar
 from SideBar import SideBar
-from TaskBarIcon import TaskBarIcon
+from SystemTrayIcon import SystemTrayIcon
 
 class MainFrame(wx.Frame):    
 	def __init__(self):
@@ -42,6 +42,9 @@ class MainFrame(wx.Frame):
 			onGridSettingsClick=self.handleGridSettingsClick
 		)
 		sizer.Add(self.sideBar, wx.SizerFlags(1).Expand())
+		
+		# create system tray icon
+		SystemTrayIcon(self)
 		
 		# shrink to system tray when hitting the close button
 		self.Bind(wx.EVT_CLOSE, self.handleCloseButton)
@@ -124,6 +127,4 @@ class MainFrame(wx.Frame):
 		self.renderSideBar()
 	
 	def handleCloseButton(self, evt):
-		self.Iconize()
-		TaskBarIcon(self)
 		self.Hide()

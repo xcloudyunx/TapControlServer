@@ -1,7 +1,7 @@
 import wx
-import qrcode, socket
+import qrcode
 
-import colors
+import colors, constants
 
 from TextElement import TextElement
 
@@ -15,13 +15,11 @@ class ConnectionArea(wx.Panel):
 		title = TextElement(parent=self, value="ConnectionArea")
 		sizer.Add(title, wx.SizerFlags(1).Expand())
 		
-		ip = socket.gethostbyname(socket.gethostname())
-		
-		manual = TextElement(parent=self, value=ip)
+		manual = TextElement(parent=self, value=constants.IP)
 		sizer.Add(manual, wx.SizerFlags(1).Expand())
 		
 		qr = qrcode.QRCode()
-		qr.add_data(ip)
+		qr.add_data(constants.IP)
 		qr.make()
 		img = qr.make_image(fill_color=colors.white, back_color=colors.primary)
 		img.save("assets/ip.png")

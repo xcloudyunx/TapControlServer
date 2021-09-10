@@ -1,7 +1,7 @@
 import wx, wx.adv
 import sys
 
-class TaskBarIcon(wx.adv.TaskBarIcon):
+class SystemTrayIcon(wx.adv.TaskBarIcon):
 	def __init__(self, frame):
 		super().__init__()
 		
@@ -36,8 +36,6 @@ class TaskBarIcon(wx.adv.TaskBarIcon):
 		
 	def open(self, evt):
 		self.frame.Show()
-		self.frame.Restore()
-		self.Destroy()
  
 	def exit(self, evt):
 		self.frame.Destroy()
