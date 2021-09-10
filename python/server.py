@@ -5,7 +5,7 @@ from MainFrame import MainFrame
 def main():
 	app = wx.App()
 	frame = MainFrame()
-	# wx.lib.inspection.InspectionTool().Show()
+	wx.lib.inspection.InspectionTool().Show()
 	app.MainLoop()	
 
 if __name__ == "__main__":

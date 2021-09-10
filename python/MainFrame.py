@@ -2,7 +2,7 @@ import wx
 
 import colors, constants
 
-from MainBarOverlay import MainBarOverlay
+from MainBar import MainBar
 from SideBar import SideBar
 from TaskBarIcon import TaskBarIcon
 
@@ -31,7 +31,7 @@ class MainFrame(wx.Frame):
 		sizer = wx.BoxSizer()
 		self.SetSizer(sizer)
 		
-		self.mainBar = MainBarOverlay(
+		self.mainBar = MainBar(
 			parent=self,
 			onChangePageButtonClick=self.handlePageChange
 		)

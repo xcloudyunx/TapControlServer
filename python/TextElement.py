@@ -1,13 +1,21 @@
 import wx
 
 import colors
-
-class TextElement(wx.Button):    
-	def __init__(self, parent, width=0, value=""):
-		super().__init__(parent=parent, label=" "*width+value, style=wx.BU_EXACTFIT)
+			
+class TextElement(wx.Panel):    
+	def __init__(self, parent, value=""):
+		super().__init__(parent=parent)
 		
-		self.Disable()
+		sizer = wx.BoxSizer()
+		self.SetSizer(sizer)
+		
+		self.SetBackgroundColour(colors.white)
+		
+		self.value = wx.StaticText(parent=self, label=value, style=wx.ALIGN_CENTRE_HORIZONTAL)
+		self.value.SetForegroundColour(colors.black)
+		sizer.Add(self.value, wx.SizerFlags(1).Centre())
 		
 	def render(self, value=None):
 		if value:
-			self.SetLabel(str(value))
+			self.value.SetLabel(str(value))
+			self.GetSizer().Layout()
