@@ -1,9 +1,10 @@
-import wx, wx.adv
+import wx
 
 import colors, constants
 
 from MainBarOverlay import MainBarOverlay
 from SideBar import SideBar
+from TaskBarIcon import TaskBarIcon
 
 class MainFrame(wx.Frame):    
 	def __init__(self):
@@ -14,6 +15,7 @@ class MainFrame(wx.Frame):
 			style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
 		)
 		
+		# states
 		self.numOfRows = 4
 		self.numOfCols = 2
 		self.numOfPages = 2
@@ -22,16 +24,18 @@ class MainFrame(wx.Frame):
 		self.buttonClassName = None
 		self.buttonID = None
 		
+		# style
 		self.SetBackgroundColour(colors.black)
 		
+		# children
 		sizer = wx.BoxSizer()
 		self.SetSizer(sizer)
 		
-		self.mainBarOverlay = MainBarOverlay(
+		self.mainBar = MainBarOverlay(
 			parent=self,
 			onChangePageButtonClick=self.handlePageChange
 		)
-		sizer.Add(self.mainBarOverlay, wx.SizerFlags(1).Expand())
+		sizer.Add(self.mainBar, wx.SizerFlags(1).Expand())
 		
 		self.sideBar = SideBar(
 			parent=self,
@@ -39,12 +43,23 @@ class MainFrame(wx.Frame):
 		)
 		sizer.Add(self.sideBar, wx.SizerFlags(1).Expand())
 		
+		# shrink to system tray when hitting the close button
+		self.Bind(wx.EVT_CLOSE, self.handleCloseButton)
+		
+		# show app
 		self.Show()
 		
+		# render after positioning set up
 		wx.CallAfter(self.updateIconButtons)
+		wx.CallAfter(self.render)
 	
 	def render(self):
-		self.mainBarOverlay.render(
+		self.renderMainBar()
+		self.renderSideBar()
+		
+	def renderMainBar(self):
+		self.updateIconButtons()
+		self.mainBar.render(
 			numOfRows=self.numOfRows,
 			numOfCols=self.numOfCols,
 			numOfPages=self.numOfPages,
@@ -53,6 +68,7 @@ class MainFrame(wx.Frame):
 			onIconButtonClick=self.handleIconButtonClick
 		)
 		
+	def renderSideBar(self):
 		self.sideBar.render(
 			className=self.buttonClassName,
 			id=self.buttonID,
@@ -78,8 +94,6 @@ class MainFrame(wx.Frame):
 					if j >= len(self.iconButtons[k][i]):
 						self.iconButtons[k][i].append("assets/default.png")
 		
-		self.render()
-		
 	def handleIconButtonClick(self, page, id):
 		self.buttonClassName = page;
 		self.buttonID = id;
@@ -89,7 +103,7 @@ class MainFrame(wx.Frame):
 		self.currentPage = pageNum%self.numOfPages
 		if self.currentPage == 0:
 			self.currentPage = self.numOfPages
-		self.render()
+		self.renderMainBar()
 	
 	def handleGridSettingsClick(self, type, val):
 		val = max(val, 1);
@@ -103,7 +117,13 @@ class MainFrame(wx.Frame):
 			if (self.currentPage > x):
 				self.currentPage = x;
 		self.updateIconButtons()
+		self.render()
 	
 	def handleExitClick(self):
 		self.buttonClassName = 0
-		self.render()
+		self.renderSideBar()
+	
+	def handleCloseButton(self, evt):
+		self.Iconize()
+		TaskBarIcon(self)
+		self.Hide()

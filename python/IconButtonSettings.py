@@ -1,4 +1,4 @@
-import wx, wx.adv
+import wx
 
 from CustomButton import CustomButton
 from TextElement import TextElement

@@ -1,4 +1,4 @@
-import wx, wx.adv
+import wx
 import qrcode, socket
 
 import colors

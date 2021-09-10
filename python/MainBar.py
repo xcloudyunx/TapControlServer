@@ -1,4 +1,4 @@
-import wx, wx.adv
+import wx
 
 import colors
 
