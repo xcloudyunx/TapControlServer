@@ -6,7 +6,7 @@ from NumberInput import NumberInput
 from CustomButton import CustomButton
 
 class GridSettings(wx.Panel):    
-	def __init__(self, parent, onGridSettingsClick, onSync):
+	def __init__(self, parent, onGridSettingsClick, onGridSettingsSave):
 		super().__init__(parent=parent)
 		
 		self.SetBackgroundColour(colors.secondary)
@@ -16,7 +16,7 @@ class GridSettings(wx.Panel):
 		self.SetSizer(sizer)
 		
 		# spacer
-		sizer.Add(0, 0, wx.SizerFlags(2).Expand())
+		sizer.Add(0, 0, wx.SizerFlags(2))
 		
 		# row settings
 		self.r = NumberInput(
@@ -27,7 +27,7 @@ class GridSettings(wx.Panel):
 		sizer.Add(self.r, wx.SizerFlags(2).Expand())
 		
 		# spacer
-		sizer.Add(0, 0, wx.SizerFlags(1).Expand())
+		sizer.Add(0, 0, wx.SizerFlags(1))
 		
 		# column settings
 		self.c = NumberInput(
@@ -38,7 +38,7 @@ class GridSettings(wx.Panel):
 		sizer.Add(self.c, wx.SizerFlags(2).Expand())
 		
 		# spacer
-		sizer.Add(0, 0, wx.SizerFlags(1).Expand())
+		sizer.Add(0, 0, wx.SizerFlags(1))
 		
 		# page settings
 		self.p = NumberInput(
@@ -49,18 +49,18 @@ class GridSettings(wx.Panel):
 		sizer.Add(self.p, wx.SizerFlags(2).Expand())
 		
 		#spacer
-		sizer.Add(0, 0, wx.SizerFlags(1).Expand())
+		sizer.Add(0, 0, wx.SizerFlags(1))
 		
 		# sync button
-		syncButton = CustomButton(
+		saveButton = CustomButton(
 			parent=self,
-			value="Sync",
-			onClick=lambda evt : onSync()
+			value="Save",
+			onClick=lambda evt : onGridSettingsSave()
 		)
-		sizer.Add(syncButton, wx.SizerFlags(2).Centre())
+		sizer.Add(saveButton, wx.SizerFlags(0).Centre())
 		
 		#spacer
-		sizer.Add(0, 0, wx.SizerFlags(1).Expand())
+		sizer.Add(0, 0, wx.SizerFlags(1))
 	
 	def render(self, numOfRows, numOfCols, numOfPages):
 		self.r.render(numOfRows)

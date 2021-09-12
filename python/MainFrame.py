@@ -1,4 +1,5 @@
 import wx
+import json
 
 import colors, constants
 
@@ -18,11 +19,14 @@ class MainFrame(wx.Frame):
 		self.onSync = onSync
 		
 		# states
-		self.numOfRows = 4
-		self.numOfCols = 2
-		self.numOfPages = 2
+		with open("assets/state.json", "r") as file:
+			self.state = json.loads(file.read())
+		# self.numOfRows = 4
+		# self.numOfCols = 2
+		# self.numOfPages = 2
+		# self.iconButtons = [[]]
+		
 		self.currentPage = 1
-		self.iconButtons = [[]]
 		self.buttonClassName = None
 		self.buttonID = None
 		
@@ -42,7 +46,7 @@ class MainFrame(wx.Frame):
 		self.sideBar = SideBar(
 			parent=self,
 			onGridSettingsClick=self.handleGridSettingsClick,
-			onSync=self.handleSync
+			onGridSettingsSave=self.handleGridSettingsSave
 		)
 		sizer.Add(self.sideBar, wx.SizerFlags(1).Expand())
 		
@@ -66,11 +70,15 @@ class MainFrame(wx.Frame):
 	def renderMainBar(self):
 		self.updateIconButtons()
 		self.mainBar.render(
-			numOfRows=self.numOfRows,
-			numOfCols=self.numOfCols,
-			numOfPages=self.numOfPages,
+			# numOfRows=self.numOfRows,
+			# numOfCols=self.numOfCols,
+			# numOfPages=self.numOfPages,
+			# iconButtons=self.iconButtons,
+			numOfRows=self.state["numOfRows"],
+			numOfCols=self.state["numOfCols"],
+			numOfPages=self.state["numOfPages"],
+			iconButtons=self.state["iconButtons"],
 			currentPage=self.currentPage,
-			iconButtons=self.iconButtons,
 			onIconButtonClick=self.handleIconButtonClick
 		)
 		
@@ -79,26 +87,27 @@ class MainFrame(wx.Frame):
 			className=self.buttonClassName,
 			id=self.buttonID,
 			onExitClick=self.handleExitClick,
-			numOfRows=self.numOfRows,
-			numOfCols=self.numOfCols,
-			numOfPages=self.numOfPages
+			onSyncButtonClick=self.handleSyncButtonClick,
+			numOfRows=self.state["numOfRows"],
+			numOfCols=self.state["numOfCols"],
+			numOfPages=self.state["numOfPages"]
 		)
 
 	def updateIconButtons(self):
-		self.iconButtons = self.iconButtons[0:self.numOfPages+1]
-		for k in range(1, self.numOfPages+1):
-			if k >= len(self.iconButtons):
-				self.iconButtons.append([])
+		self.state["iconButtons"] = self.state["iconButtons"][0:self.state["numOfPages"]+1]
+		for k in range(1, self.state["numOfPages"]+1):
+			if k >= len(self.state["iconButtons"]):
+				self.state["iconButtons"].append([])
 			else:
-				self.iconButtons[k] = self.iconButtons[k][0:self.numOfRows]
-			for i in range(self.numOfRows):
-				if i >= len(self.iconButtons[k]):
-					self.iconButtons[k].append([])
+				self.state["iconButtons"][k] = self.state["iconButtons"][k][0:self.state["numOfRows"]]
+			for i in range(self.state["numOfRows"]):
+				if i >= len(self.state["iconButtons"][k]):
+					self.state["iconButtons"][k].append([])
 				else:
-					self.iconButtons[k] = self.iconButtons[k][0:self.numOfCols]
-				for j in range(self.numOfCols):
-					if j >= len(self.iconButtons[k][i]):
-						self.iconButtons[k][i].append("assets/default.png")
+					self.state["iconButtons"][k] = self.state["iconButtons"][k][0:self.state["numOfCols"]]
+				for j in range(self.state["numOfCols"]):
+					if j >= len(self.state["iconButtons"][k][i]):
+						self.state["iconButtons"][k][i].append("assets/default.png")
 		
 	def handleIconButtonClick(self, page, id):
 		self.buttonClassName = page;
@@ -106,20 +115,20 @@ class MainFrame(wx.Frame):
 		self.render()
 		
 	def handlePageChange(self, pageNum):
-		self.currentPage = pageNum%self.numOfPages
+		self.currentPage = pageNum%self.state["numOfPages"]
 		if self.currentPage == 0:
-			self.currentPage = self.numOfPages
+			self.currentPage = self.state["numOfPages"]
 		self.renderMainBar()
 	
 	def handleGridSettingsClick(self, type, val):
 		val = max(val, 1);
 		if type == "row":
-			self.numOfRows = min(constants.rowMax, val)
+			self.state["numOfRows"] = min(constants.rowMax, val)
 		elif type == "col":
-			self.numOfCols = min(constants.colMax, val)
+			self.state["numOfCols"] = min(constants.colMax, val)
 		elif type == "page":
 			x = min(constants.pageMax, val)
-			self.numOfPages = x
+			self.state["numOfPages"] = x
 			if (self.currentPage > x):
 				self.currentPage = x;
 		self.updateIconButtons()
@@ -132,6 +141,11 @@ class MainFrame(wx.Frame):
 	def handleCloseButton(self, evt):
 		self.Hide()
 		
-	def handleSync(self):
-		print("saving")
+	def handleGridSettingsSave(self):
+		with open("assets/state.json", "w") as file:
+			# file.write(json.dumps(self.state, indent=4))
+			file.write(json.dumps(self.state))
+			
+	def handleSyncButtonClick(self):
+		print("syncing 1")
 		self.onSync()

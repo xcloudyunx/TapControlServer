@@ -7,7 +7,7 @@ from IconButtonSettings import IconButtonSettings
 from GridSettings import GridSettings
 
 class SideBar(wx.Panel):    
-	def __init__(self, parent, onGridSettingsClick, onSync):
+	def __init__(self, parent, onGridSettingsClick, onGridSettingsSave):
 		super().__init__(parent=parent)
 		
 		self.SetBackgroundColour(colors.primary)
@@ -18,11 +18,11 @@ class SideBar(wx.Panel):
 		self.gridSettings = GridSettings(
 			parent=self,
 			onGridSettingsClick=onGridSettingsClick,
-			onSync=onSync
+			onGridSettingsSave=onGridSettingsSave
 		)
 		sizer.Add(self.gridSettings, wx.SizerFlags(1).Expand())
 	
-	def render(self, className, id, onExitClick, numOfRows, numOfCols, numOfPages):
+	def render(self, className, id, onExitClick, onSyncButtonClick, numOfRows, numOfCols, numOfPages):
 		try:
 			self.element.Destroy()
 		except:
@@ -35,7 +35,10 @@ class SideBar(wx.Panel):
 				onClick=onExitClick
 			)
 		else:
-			self.element = ConnectionArea(parent=self)
+			self.element = ConnectionArea(
+				parent=self,
+				onSyncButtonClick=onSyncButtonClick
+			)
 		self.GetSizer().Insert(0, self.element, wx.SizerFlags(3).Expand())
 		self.GetSizer().Layout()
 	

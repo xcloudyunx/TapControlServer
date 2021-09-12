@@ -24,4 +24,5 @@ class Server(threading.Thread):
 				print(data)
 				
 	def handleSync(self):
+		# update values from json file
 		print("syncing")
