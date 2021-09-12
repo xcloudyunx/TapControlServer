@@ -1,11 +1,10 @@
-import threading
-
 import App
-import Server
+from Server import Server
 
 def main():
-	threading.Thread(target=Server.startServer, daemon=True).start()
-	App.startApp()
+	server = Server()
+	server.start()
+	App.startApp(onSync=server.handleSync)
 
 if __name__ == "__main__":
 	main()

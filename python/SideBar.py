@@ -7,7 +7,7 @@ from IconButtonSettings import IconButtonSettings
 from GridSettings import GridSettings
 
 class SideBar(wx.Panel):    
-	def __init__(self, parent, onGridSettingsClick):
+	def __init__(self, parent, onGridSettingsClick, onSync):
 		super().__init__(parent=parent)
 		
 		self.SetBackgroundColour(colors.primary)
@@ -17,7 +17,8 @@ class SideBar(wx.Panel):
 		
 		self.gridSettings = GridSettings(
 			parent=self,
-			onClick=onGridSettingsClick
+			onGridSettingsClick=onGridSettingsClick,
+			onSync=onSync
 		)
 		sizer.Add(self.gridSettings, wx.SizerFlags(1).Expand())
 	

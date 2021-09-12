@@ -7,13 +7,15 @@ from SideBar import SideBar
 from SystemTrayIcon import SystemTrayIcon
 
 class MainFrame(wx.Frame):    
-	def __init__(self):
+	def __init__(self, onSync):
 		super().__init__(
 			parent=None,
 			title="Remote Server",
 			size=(600, 600),
 			style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
 		)
+		
+		self.onSync = onSync
 		
 		# states
 		self.numOfRows = 4
@@ -39,7 +41,8 @@ class MainFrame(wx.Frame):
 		
 		self.sideBar = SideBar(
 			parent=self,
-			onGridSettingsClick=self.handleGridSettingsClick
+			onGridSettingsClick=self.handleGridSettingsClick,
+			onSync=self.handleSync
 		)
 		sizer.Add(self.sideBar, wx.SizerFlags(1).Expand())
 		
@@ -128,3 +131,7 @@ class MainFrame(wx.Frame):
 	
 	def handleCloseButton(self, evt):
 		self.Hide()
+		
+	def handleSync(self):
+		print("saving")
+		self.onSync()
