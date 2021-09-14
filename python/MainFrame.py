@@ -21,10 +21,6 @@ class MainFrame(wx.Frame):
 		# states
 		with open("assets/state.json", "r") as file:
 			self.state = json.loads(file.read())
-		# self.numOfRows = 4
-		# self.numOfCols = 2
-		# self.numOfPages = 2
-		# self.iconButtons = [[]]
 		
 		self.currentPage = 1
 		self.buttonClassName = None
@@ -70,13 +66,8 @@ class MainFrame(wx.Frame):
 	def renderMainBar(self):
 		self.updateIconButtons()
 		self.mainBar.render(
-			# numOfRows=self.numOfRows,
-			# numOfCols=self.numOfCols,
-			# numOfPages=self.numOfPages,
-			# iconButtons=self.iconButtons,
 			numOfRows=self.state["numOfRows"],
 			numOfCols=self.state["numOfCols"],
-			numOfPages=self.state["numOfPages"],
 			iconButtons=self.state["iconButtons"],
 			currentPage=self.currentPage,
 			onIconButtonClick=self.handleIconButtonClick
@@ -115,9 +106,7 @@ class MainFrame(wx.Frame):
 		self.render()
 		
 	def handlePageChange(self, pageNum):
-		self.currentPage = pageNum%self.state["numOfPages"]
-		if self.currentPage == 0:
-			self.currentPage = self.state["numOfPages"]
+		self.currentPage = min(max(1, pageNum), self.state["numOfPages"])
 		self.renderMainBar()
 	
 	def handleGridSettingsClick(self, type, val):
