@@ -147,5 +147,4 @@ class MainFrame(wx.Frame):
 			file.write(json.dumps(self.state))
 			
 	def handleSyncButtonClick(self):
-		print("syncing 1")
 		self.onSync()

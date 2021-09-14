@@ -1,5 +1,6 @@
 import threading
 import socket
+import json
 
 import constants
 
@@ -18,6 +19,8 @@ class Server(threading.Thread):
 			conn, address = self.server.accept()
 			c = True
 			print("accepted")
+			
+			self.handleSync()
 
 			while c:
 				data = conn.recv(constants.MSGSIZE)
@@ -26,3 +29,6 @@ class Server(threading.Thread):
 	def handleSync(self):
 		# update values from json file
 		print("syncing")
+		with open("assets/state.json", "r") as file:
+			self.state = json.loads(file.read())
+		print("syncing complete")
