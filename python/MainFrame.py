@@ -79,7 +79,9 @@ class MainFrame(wx.Frame):
 		self.sideBar.render(
 			className=self.buttonClassName,
 			id=self.buttonID,
+			numOfCols=self.state["numOfCols"],
 			onExitClick=self.handleExitClick,
+			onSaveIconButton=self.handleSaveIconButton,
 			onSyncButtonClick=self.handleSyncButtonClick
 		)
 		
@@ -115,3 +117,6 @@ class MainFrame(wx.Frame):
 			
 	def handleSyncButtonClick(self):
 		self.onSyncImage()
+		
+	def handleSaveIconButton(self):
+		print("handle save icon button")
