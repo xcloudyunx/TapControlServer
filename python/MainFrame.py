@@ -8,7 +8,7 @@ from SideBar import SideBar
 from SystemTrayIcon import SystemTrayIcon
 
 class MainFrame(wx.Frame):    
-	def __init__(self, onSync):
+	def __init__(self, onSyncGrid, onSyncImage):
 		super().__init__(
 			parent=None,
 			title="Remote Server",
@@ -16,7 +16,8 @@ class MainFrame(wx.Frame):
 			style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
 		)
 		
-		self.onSync = onSync
+		self.onSyncGrid = onSyncGrid
+		self.onSyncImage = onSyncImage
 		
 		# states
 		with open("assets/state.json", "r") as file:
@@ -109,8 +110,8 @@ class MainFrame(wx.Frame):
 		
 	def handleGridSettingsSave(self):
 		with open("assets/state.json", "w") as file:
-			# file.write(json.dumps(self.state, indent=4))
 			file.write(json.dumps(self.state))
+		self.onSyncGrid(self.state)
 			
 	def handleSyncButtonClick(self):
-		self.onSync()
+		self.onSyncImage()

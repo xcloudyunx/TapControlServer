@@ -15,25 +15,38 @@ class Server(threading.Thread):
 		
 	def run(self):
 		while True:
-			conn = None
+			self.conn = None
 			print("RESET")
 			self.conn, address = self.server.accept()
 			c = True
 			print("accepted")
 			
-			self.handleSync()
+			self.checkSync()
 
 			while c:
 				data = self.receiveMessage()
 				print(data)
 				
-	def handleSync(self):
-		print("syncing")
+	def checkSync(self):
 		with open("assets/state.json", "r") as file:
 			self.state = json.loads(file.read())
-		print(self.hash(self.state))
 		self.sendMessage('{"hash":"'+self.hash(self.state)+'"}')
-		print("syncing complete")
+		synced = bool(self.receiveMessage())
+		if not synced:
+			handleSyncGrid(self.state)
+				
+	def handleSyncGrid(self, state):
+		self.state = state
+		if self.conn:
+			self.sendMessage(json.dumps(self.state))
+		
+	def handleSyncImage(self):
+		if self.conn:
+			# sync the image
+			pass
+		else:
+			# add to sync file
+			pass
 		
 	def receiveMessage(self):
 		return self.conn.recv(constants.MSGSIZE).decode()

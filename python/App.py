@@ -2,8 +2,8 @@ import wx.lib.inspection
 import wx
 from MainFrame import MainFrame
 
-def startApp(onSync):
+def startApp(onSyncGrid, onSyncImage):
 	app = wx.App()
-	frame = MainFrame(onSync)
+	frame = MainFrame(onSyncGrid, onSyncImage)
 	# wx.lib.inspection.InspectionTool().Show()
 	app.MainLoop()
