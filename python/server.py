@@ -1,6 +1,7 @@
 import threading
 import socket
 import json
+import hashlib
 
 import constants
 
@@ -16,19 +17,29 @@ class Server(threading.Thread):
 		while True:
 			conn = None
 			print("RESET")
-			conn, address = self.server.accept()
+			self.conn, address = self.server.accept()
 			c = True
 			print("accepted")
 			
 			self.handleSync()
 
 			while c:
-				data = conn.recv(constants.MSGSIZE)
+				data = self.receiveMessage()
 				print(data)
 				
 	def handleSync(self):
-		# update values from json file
 		print("syncing")
 		with open("assets/state.json", "r") as file:
 			self.state = json.loads(file.read())
+		print(self.hash(self.state))
+		self.sendMessage('{"hash":"'+self.hash(self.state)+'"}')
 		print("syncing complete")
+		
+	def receiveMessage(self):
+		return self.conn.recv(constants.MSGSIZE).decode()
+		
+	def sendMessage(self, msg):
+		self.conn.send(msg.encode())
+	
+	def hash(self, obj):
+		return hashlib.sha256(json.dumps(obj).encode()).hexdigest()

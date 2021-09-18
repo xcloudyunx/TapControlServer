@@ -45,7 +45,7 @@ class MainBar(wx.Panel):
 		)
 		mainSizer.Add(self.btnRight, wx.SizerFlags(1).Centre())
 	
-	def render(self, numOfRows, numOfCols, currentPage, iconButtons, onIconButtonClick):
+	def render(self, numOfRows, numOfCols, currentPage, onIconButtonClick):
 		# stored for changing page
 		self.currentPage = currentPage
 		
@@ -59,7 +59,6 @@ class MainBar(wx.Panel):
 			className=currentPage,
 			numOfRows=numOfRows,
 			numOfCols=numOfCols,
-			page=iconButtons[currentPage],
 			onClick=onIconButtonClick
 		)
 		self.sizer.Insert(0, self.grid, wx.SizerFlags(30).Expand())

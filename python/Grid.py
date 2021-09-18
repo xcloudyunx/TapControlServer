@@ -4,8 +4,8 @@ import colors
 
 from Row import Row
 
-class Grid(wx.Panel):    
-	def __init__(self, parent, className, numOfRows, numOfCols, page, onClick):
+class Grid(wx.Panel):
+	def __init__(self, parent, className, numOfRows, numOfCols, onClick):
 		super().__init__(parent=parent)
 		
 		self.className = className
@@ -23,10 +23,10 @@ class Grid(wx.Panel):
 			row = Row(
 				parent=self,
 				id=i,
+				className=className,
 				numOfCols=numOfCols,
 				buttonDim=buttonDim,
-				row=page[i],
-				onClick=lambda id : onClick(className, id)
+				onClick=onClick
 			)
 			self.GetSizer().Add(row, wx.SizerFlags(0).Expand())
 			self.GetSizer().Add(0, 0, 1)

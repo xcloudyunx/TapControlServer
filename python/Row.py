@@ -4,8 +4,8 @@ import colors
 
 from IconButton import IconButton
 
-class Row(wx.Panel):    
-	def __init__(self, parent, id, numOfCols, buttonDim, row, onClick):
+class Row(wx.Panel):
+	def __init__(self, parent, id, className, numOfCols, buttonDim, onClick):
 		super().__init__(parent=parent)
 		
 		sizer = wx.BoxSizer()
@@ -16,7 +16,7 @@ class Row(wx.Panel):
 			iconButton = IconButton(
 				parent=self,
 				id=id*numOfCols+j,
-				source=row[j],
+				className=className,
 				buttonDim=buttonDim,
 				onClick=onClick
 			)

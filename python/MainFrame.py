@@ -56,7 +56,6 @@ class MainFrame(wx.Frame):
 		self.Show()
 		
 		# render after positioning set up
-		wx.CallAfter(self.updateIconButtons)
 		wx.CallAfter(self.render)
 	
 	def render(self):
@@ -64,11 +63,9 @@ class MainFrame(wx.Frame):
 		self.renderSideBar()
 		
 	def renderMainBar(self):
-		self.updateIconButtons()
 		self.mainBar.render(
 			numOfRows=self.state["numOfRows"],
 			numOfCols=self.state["numOfCols"],
-			iconButtons=self.state["iconButtons"],
 			currentPage=self.currentPage,
 			onIconButtonClick=self.handleIconButtonClick
 		)
@@ -83,27 +80,11 @@ class MainFrame(wx.Frame):
 			numOfCols=self.state["numOfCols"],
 			numOfPages=self.state["numOfPages"]
 		)
-
-	def updateIconButtons(self):
-		self.state["iconButtons"] = self.state["iconButtons"][0:self.state["numOfPages"]+1]
-		for k in range(1, self.state["numOfPages"]+1):
-			if k >= len(self.state["iconButtons"]):
-				self.state["iconButtons"].append([])
-			else:
-				self.state["iconButtons"][k] = self.state["iconButtons"][k][0:self.state["numOfRows"]]
-			for i in range(self.state["numOfRows"]):
-				if i >= len(self.state["iconButtons"][k]):
-					self.state["iconButtons"][k].append([])
-				else:
-					self.state["iconButtons"][k] = self.state["iconButtons"][k][0:self.state["numOfCols"]]
-				for j in range(self.state["numOfCols"]):
-					if j >= len(self.state["iconButtons"][k][i]):
-						self.state["iconButtons"][k][i].append("assets/default.png")
 		
 	def handleIconButtonClick(self, page, id):
 		self.buttonClassName = page;
 		self.buttonID = id;
-		self.render()
+		self.renderSideBar()
 		
 	def handlePageChange(self, pageNum):
 		self.currentPage = min(max(1, pageNum), self.state["numOfPages"])
@@ -120,7 +101,6 @@ class MainFrame(wx.Frame):
 			self.state["numOfPages"] = x
 			if (self.currentPage > x):
 				self.currentPage = x;
-		self.updateIconButtons()
 		self.render()
 	
 	def handleExitClick(self):
