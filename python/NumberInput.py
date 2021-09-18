@@ -6,8 +6,10 @@ from TextElement import TextElement
 from CustomButton import CustomButton
 
 class NumberInput(wx.Panel):    
-	def __init__(self, parent, title, onClick):
+	def __init__(self, parent, title, value, onClick):
 		super().__init__(parent=parent)
+		
+		self.value = value
 		
 		sizer = wx.BoxSizer()
 		self.SetSizer(sizer)
@@ -32,7 +34,8 @@ class NumberInput(wx.Panel):
 		sizer.Add(btnLeft, wx.SizerFlags(1).Expand())
 		
 		self.txt = TextElement(
-			parent=self
+			parent=self,
+			value=value
 		)
 		sizer.Add(self.txt, wx.SizerFlags(2).Expand())
 		

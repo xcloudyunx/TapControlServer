@@ -11,7 +11,7 @@ class TextElement(wx.Panel):
 		
 		self.SetBackgroundColour(colors.white)
 		
-		self.value = wx.StaticText(parent=self, label=value, style=wx.ALIGN_CENTRE_HORIZONTAL)
+		self.value = wx.StaticText(parent=self, label=str(value), style=wx.ALIGN_CENTRE_HORIZONTAL)
 		self.value.SetForegroundColour(colors.black)
 		sizer.Add(self.value, wx.SizerFlags(1).Centre())
 		

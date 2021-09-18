@@ -45,7 +45,7 @@ class MainBar(wx.Panel):
 		)
 		mainSizer.Add(self.btnRight, wx.SizerFlags(1).Centre())
 	
-	def render(self, numOfRows, numOfCols, currentPage, onIconButtonClick):
+	def render(self, numOfRows, numOfCols, numOfPages, currentPage, onIconButtonClick):
 		# stored for changing page
 		self.currentPage = currentPage
 		
@@ -65,4 +65,4 @@ class MainBar(wx.Panel):
 		self.sizer.Layout()
 		
 		# update text elements
-		self.txt.render(currentPage)
+		self.txt.render(str(currentPage)+"/"+str(numOfPages))

@@ -1,13 +1,15 @@
 import wx
 
-import colors
+import colors, constants
 
 from NumberInput import NumberInput
 from CustomButton import CustomButton
 
 class GridSettings(wx.Panel):    
-	def __init__(self, parent, onGridSettingsClick, onGridSettingsSave):
+	def __init__(self, parent, onGridSettingsClick, onGridSettingsSave, numOfRows, numOfCols, numOfPages):
 		super().__init__(parent=parent)
+		
+		self.onGridSettingsClick = onGridSettingsClick
 		
 		self.SetBackgroundColour(colors.secondary)
 		
@@ -22,7 +24,8 @@ class GridSettings(wx.Panel):
 		self.r = NumberInput(
 			parent=self,
 			title="Rows",
-			onClick=lambda val : onGridSettingsClick("row", val)
+			value=numOfRows,
+			onClick=lambda val : self.handleGridSettingsClick("numOfRows", val)
 		)
 		sizer.Add(self.r, wx.SizerFlags(2).Expand())
 		
@@ -33,7 +36,8 @@ class GridSettings(wx.Panel):
 		self.c = NumberInput(
 			parent=self,
 			title="Columns",
-			onClick=lambda val : onGridSettingsClick("col", val)
+			value=numOfCols,
+			onClick=lambda val : self.handleGridSettingsClick("numOfCols", val)
 		)
 		sizer.Add(self.c, wx.SizerFlags(2).Expand())
 		
@@ -44,7 +48,8 @@ class GridSettings(wx.Panel):
 		self.p = NumberInput(
 			parent=self,
 			title="Pages",
-			onClick=lambda val : onGridSettingsClick("page", val)
+			value=numOfPages,
+			onClick=lambda val : self.handleGridSettingsClick("numOfPages", val)
 		)
 		sizer.Add(self.p, wx.SizerFlags(2).Expand())
 		
@@ -61,8 +66,16 @@ class GridSettings(wx.Panel):
 		
 		#spacer
 		sizer.Add(0, 0, wx.SizerFlags(1))
-	
-	def render(self, numOfRows, numOfCols, numOfPages):
-		self.r.render(numOfRows)
-		self.c.render(numOfCols)
-		self.p.render(numOfPages)
+		
+	def handleGridSettingsClick(self, type, val):
+		val = max(val, 1);
+		if type == "numOfRows":
+			val = min(constants.rowMax, val)
+			self.r.render(val)
+		elif type == "numOfCols":
+			val = min(constants.colMax, val)
+			self.c.render(val)
+		elif type == "numOfPages":
+			val = min(constants.pageMax, val)
+			self.p.render(val)
+		self.onGridSettingsClick(type, val)

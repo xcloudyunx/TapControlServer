@@ -42,7 +42,10 @@ class MainFrame(wx.Frame):
 		self.sideBar = SideBar(
 			parent=self,
 			onGridSettingsClick=self.handleGridSettingsClick,
-			onGridSettingsSave=self.handleGridSettingsSave
+			onGridSettingsSave=self.handleGridSettingsSave,
+			numOfRows=self.state["numOfRows"],
+			numOfCols=self.state["numOfCols"],
+			numOfPages=self.state["numOfPages"]
 		)
 		sizer.Add(self.sideBar, wx.SizerFlags(1).Expand())
 		
@@ -66,6 +69,7 @@ class MainFrame(wx.Frame):
 		self.mainBar.render(
 			numOfRows=self.state["numOfRows"],
 			numOfCols=self.state["numOfCols"],
+			numOfPages=self.state["numOfPages"],
 			currentPage=self.currentPage,
 			onIconButtonClick=self.handleIconButtonClick
 		)
@@ -75,10 +79,7 @@ class MainFrame(wx.Frame):
 			className=self.buttonClassName,
 			id=self.buttonID,
 			onExitClick=self.handleExitClick,
-			onSyncButtonClick=self.handleSyncButtonClick,
-			numOfRows=self.state["numOfRows"],
-			numOfCols=self.state["numOfCols"],
-			numOfPages=self.state["numOfPages"]
+			onSyncButtonClick=self.handleSyncButtonClick
 		)
 		
 	def handleIconButtonClick(self, page, id):
@@ -87,21 +88,17 @@ class MainFrame(wx.Frame):
 		self.renderSideBar()
 		
 	def handlePageChange(self, pageNum):
-		self.currentPage = min(max(1, pageNum), self.state["numOfPages"])
-		self.renderMainBar()
+		newPage = min(max(1, pageNum), self.state["numOfPages"])
+		if newPage != self.currentPage:
+			self.currentPage = newPage
+			self.renderMainBar()
 	
 	def handleGridSettingsClick(self, type, val):
-		val = max(val, 1);
-		if type == "row":
-			self.state["numOfRows"] = min(constants.rowMax, val)
-		elif type == "col":
-			self.state["numOfCols"] = min(constants.colMax, val)
-		elif type == "page":
-			x = min(constants.pageMax, val)
-			self.state["numOfPages"] = x
-			if (self.currentPage > x):
-				self.currentPage = x;
-		self.render()
+		self.state[type] = val
+		if type == "numOfPages":
+			if (self.currentPage > val):
+				self.currentPage = val;
+		self.renderMainBar()
 	
 	def handleExitClick(self):
 		self.buttonClassName = 0
