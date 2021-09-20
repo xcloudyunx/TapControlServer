@@ -53,7 +53,9 @@ class IconButtonSettingsContainer(wx.Panel):
 		
 		# main element
 		iconButtonSettings = IconButtonSettings(
-			parent=self
+			parent=self,
+			id=id,
+			className=className
 		)
 		sizerCentre.Add(iconButtonSettings, wx.SizerFlags(20).Expand())
 		
