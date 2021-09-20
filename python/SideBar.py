@@ -3,7 +3,7 @@ import wx
 import colors
 
 from ConnectionArea import ConnectionArea
-from IconButtonSettings import IconButtonSettings
+from IconButtonSettingsContainer import IconButtonSettingsContainer
 from GridSettings import GridSettings
 
 class SideBar(wx.Panel):    
@@ -31,7 +31,7 @@ class SideBar(wx.Panel):
 		except:
 			pass
 		if className:
-			self.element = IconButtonSettings(
+			self.element = IconButtonSettingsContainer(
 				parent=self,
 				className=className,
 				id=id,
