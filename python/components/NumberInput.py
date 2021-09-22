@@ -2,6 +2,7 @@ import wx
 
 from config import colors
 
+from components.Label import Label
 from components.TextElement import TextElement
 from components.CustomButton import CustomButton
 
@@ -16,14 +17,10 @@ class NumberInput(wx.Panel):
 		
 		sizer.Add(0, 0, wx.SizerFlags(1).Expand())
 		
-		label = wx.StaticText(
+		label = Label(
 			parent=self,
-			label=title+":"
+			value=title+":"
 		)
-		label.SetForegroundColour(colors.white)
-		font = label.GetFont()
-		font.SetPointSize(12)
-		label.SetFont(font)
 		sizer.Add(label, wx.SizerFlags(8).Expand())
 		
 		btnLeft = CustomButton(

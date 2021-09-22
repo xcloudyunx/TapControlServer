@@ -1,19 +1,16 @@
 import wx
-# change imports if change to sys.argv
-import importlib
-import pkgutil
-
-import plugins
 
 from config import colors
 
 from components.IconButton import IconButton
 
 class IconButtonSettings(wx.ScrolledWindow):    
-	def __init__(self, parent, id, className):
+	def __init__(self, parent, id, className, pluginList):
 		super().__init__(parent=parent)
 		
 		self.SetBackgroundColour(colors.secondary)
+		
+		self.pluginList = pluginList
 		
 		# main sizer
 		sizer = wx.BoxSizer(wx.VERTICAL)
@@ -37,20 +34,18 @@ class IconButtonSettings(wx.ScrolledWindow):
 		sizer.Add(imageFilePicker, wx.SizerFlags(0))
 		
 		# may change the below to sys.argv stuff for when its compiled
-		self.plugins = {
-			name: importlib.import_module(name)
-			for finder, name, ispkg
-			in pkgutil.iter_modules(plugins.__path__, plugins.__name__+".")
-		}
-		for finder, name, ispkg in pkgutil.iter_modules(plugins.__path__, plugins.__name__+"."):
-			print(name)
-		choices = [self.plugins[plugin].getName() for plugin in self.plugins]
-		command = wx.Choice(
+		choices = [plugin.getName() for plugin in self.pluginList]
+		self.command = wx.Choice(
 			parent=self,
-			# choices=choices
+			choices=choices
 		)
-		sizer.Add(command, wx.SizerFlags(0))
+		sizer.Add(self.command, wx.SizerFlags(0))
 		
-	
-	def render(self):
-		pass
+		self.command.Bind(wx.EVT_CHOICE, self.changeCommand)
+		
+	def changeCommand(self, evt):
+		plugin = self.pluginList[self.command.GetSelection()]
+		
+		# something to do with plugins.getProperties()
+		
+		self.GetSizer().Layout()

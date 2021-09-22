@@ -6,7 +6,7 @@ from components.Heading import Heading
 from components.IconButtonSettings import IconButtonSettings
 
 class IconButtonSettingsContainer(wx.Panel):    
-	def __init__(self, parent, className, id, numOfCols, onExitClick, onSaveIconButton):
+	def __init__(self, parent, className, id, numOfCols, onExitClick, onSaveIconButton, pluginList):
 		super().__init__(parent=parent)
 		
 		# main sizer
@@ -55,7 +55,8 @@ class IconButtonSettingsContainer(wx.Panel):
 		iconButtonSettings = IconButtonSettings(
 			parent=self,
 			id=id,
-			className=className
+			className=className,
+			pluginList=pluginList
 		)
 		sizerCentre.Add(iconButtonSettings, wx.SizerFlags(20).Expand())
 		
@@ -85,6 +86,3 @@ class IconButtonSettingsContainer(wx.Panel):
 		
 		# spacer
 		mainSizer.Add(0, 0, 1)
-	
-	def render(self):
-		pass
