@@ -3,7 +3,7 @@ import socket
 import json
 import hashlib
 
-import constants
+from config import constants
 
 class Server(threading.Thread):
 	def __init__(self):

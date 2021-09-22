@@ -1,6 +1,6 @@
 import wx.lib.inspection
 import wx
-from MainFrame import MainFrame
+from screens.MainFrame import MainFrame
 
 def startApp(onSyncGrid, onSyncImage):
 	app = wx.App()
