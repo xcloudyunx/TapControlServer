@@ -5,12 +5,12 @@ from config import colors
 from components.IconButton import IconButton
 
 class IconButtonSettings(wx.ScrolledWindow):    
-	def __init__(self, parent, id, className, pluginList):
+	def __init__(self, parent, id, className, plugins):
 		super().__init__(parent=parent)
 		
 		self.SetBackgroundColour(colors.secondary)
 		
-		self.pluginList = pluginList
+		self.plugins = plugins
 		
 		# main sizer
 		sizer = wx.BoxSizer(wx.VERTICAL)
@@ -34,7 +34,7 @@ class IconButtonSettings(wx.ScrolledWindow):
 		sizer.Add(imageFilePicker, wx.SizerFlags(0))
 		
 		# may change the below to sys.argv stuff for when its compiled
-		choices = [plugin.getName() for plugin in self.pluginList]
+		choices = [plugin.getName() for plugin in self.plugins]
 		self.command = wx.Choice(
 			parent=self,
 			choices=choices
@@ -44,7 +44,7 @@ class IconButtonSettings(wx.ScrolledWindow):
 		self.command.Bind(wx.EVT_CHOICE, self.changeCommand)
 		
 	def changeCommand(self, evt):
-		plugin = self.pluginList[self.command.GetSelection()]
+		plugin = self.plugins[self.command.GetSelection()]
 		
 		# something to do with plugins.getProperties()
 		

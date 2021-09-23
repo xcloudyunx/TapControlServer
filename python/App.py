@@ -3,10 +3,10 @@ import wx
 
 from screens.MainFrame import MainFrame
 
-def startApp(pluginList, onSyncGrid, onSyncImage):
+def startApp(plugins, onSyncGrid, onSyncImage):
 	app = wx.App()
 	frame = MainFrame(
-		pluginList=pluginList,
+		plugins=plugins,
 		onSyncGrid=onSyncGrid,
 		onSyncImage=onSyncImage
 	)

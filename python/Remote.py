@@ -1,23 +1,20 @@
-# change imports if change to sys.argv
-import importlib
-import pkgutil
-
-import plugins
+import os
 
 import App
 from Server import Server
 
+from components.Plugin import Plugin
+
 def main():
-	pluginList = [
-		importlib.import_module(name)
-		for finder, name, ispkg
-		in pkgutil.iter_modules(plugins.__path__, plugins.__name__+".")
+	plugins = [
+		Plugin(plugin)
+		for plugin in os.listdir("./plugins")
 	]
 
 	server = Server()
 	server.start()
 	App.startApp(
-		pluginList=pluginList,
+		plugins=plugins,
 		onSyncGrid=server.handleSyncGrid,
 		onSyncImage=server.handleSyncImage
 	)

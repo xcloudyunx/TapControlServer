@@ -6,7 +6,7 @@ from components.Heading import Heading
 from components.IconButtonSettings import IconButtonSettings
 
 class IconButtonSettingsContainer(wx.Panel):    
-	def __init__(self, parent, className, id, numOfCols, onExitClick, onSaveIconButton, pluginList):
+	def __init__(self, parent, className, id, numOfCols, onExitClick, onSaveIconButton, plugins):
 		super().__init__(parent=parent)
 		
 		# main sizer
@@ -56,7 +56,7 @@ class IconButtonSettingsContainer(wx.Panel):
 			parent=self,
 			id=id,
 			className=className,
-			pluginList=pluginList
+			plugins=plugins
 		)
 		sizerCentre.Add(iconButtonSettings, wx.SizerFlags(20).Expand())
 		

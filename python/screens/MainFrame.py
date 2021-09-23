@@ -9,7 +9,7 @@ from components.SideBar import SideBar
 from components.SystemTrayIcon import SystemTrayIcon
 
 class MainFrame(wx.Frame):    
-	def __init__(self, pluginList, onSyncGrid, onSyncImage):
+	def __init__(self, plugins, onSyncGrid, onSyncImage):
 		super().__init__(
 			parent=None,
 			title="Remote Server",
@@ -17,7 +17,7 @@ class MainFrame(wx.Frame):
 			style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
 		)
 		
-		self.pluginList = pluginList
+		self.plugins = plugins
 		self.onSyncGrid = onSyncGrid
 		self.onSyncImage = onSyncImage
 		
@@ -85,7 +85,7 @@ class MainFrame(wx.Frame):
 			onExitClick=self.handleExitClick,
 			onSaveIconButton=self.handleSaveIconButton,
 			onSyncButtonClick=self.handleSyncButtonClick,
-			pluginList=self.pluginList
+			plugins=self.plugins
 		)
 		
 	def handleIconButtonClick(self, page, id):
