@@ -9,6 +9,8 @@ class IconButtonSettingsContainer(wx.Panel):
 	def __init__(self, parent, className, id, numOfCols, onExitClick, onSaveIconButton, plugins):
 		super().__init__(parent=parent)
 		
+		self.onSaveIconButton = onSaveIconButton
+		
 		# main sizer
 		mainSizer = wx.BoxSizer(wx.VERTICAL)
 		self.SetSizer(mainSizer)
@@ -77,7 +79,7 @@ class IconButtonSettingsContainer(wx.Panel):
 		saveButton = CustomButton(
 			parent=self,
 			value="Save",
-			onClick=lambda evt : onSaveIconButton()
+			onClick=handleSaveButtonClick
 		)
 		sizerBottom.Add(saveButton, wx.SizerFlags(1))
 		

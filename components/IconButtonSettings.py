@@ -1,10 +1,13 @@
 import wx
+import wx.lib.scrolledpanel
 
 from config import colors
 
 from components.IconButton import IconButton
+from components.FileInput import FileInput
+from components.ChoiceInput import ChoiceInput
 
-class IconButtonSettings(wx.ScrolledWindow):    
+class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):    
 	def __init__(self, parent, id, className, plugins):
 		super().__init__(parent=parent)
 		
@@ -13,9 +16,16 @@ class IconButtonSettings(wx.ScrolledWindow):
 		self.plugins = plugins
 		
 		# main sizer
-		sizer = wx.BoxSizer(wx.VERTICAL)
-		self.SetSizer(sizer)
+		mainSizer = wx.BoxSizer(wx.VERTICAL)
+		self.SetSizer(mainSizer)
 		
+		self.sizerTop = wx.BoxSizer(wx.VERTICAL)
+		mainSizer.Add(self.sizerTop, wx.SizerFlags(2).Expand())
+		
+		# spacer
+		self.sizerTop.Add(0, 0, 1)
+		
+		# preview icon image
 		self.icon = IconButton(
 			parent=self,
 			id=id,
@@ -23,29 +33,71 @@ class IconButtonSettings(wx.ScrolledWindow):
 			buttonDim=100, #still need to decide on this size
 			onClick=lambda className, id : None
 		)
-		sizer.Add(self.icon, wx.SizerFlags(0))
+		self.sizerTop.Add(self.icon, wx.SizerFlags(0).Centre())
 		
-		imageFilePicker = wx.FilePickerCtrl(
+		# spacer
+		self.sizerTop.Add(0, 0, 1)
+		
+		# file picker for icon image
+		imageFilePicker = FileInput(
 			parent=self,
-			wildcard=("Images (*.png,*.jpg)|*.png;*.jpg")
+			title="Icon",
+			wildcard="Images (*.png,*.jpg)|*.png;*.jpg"
 		)
-		# print(imageFilePicker.GetPath())
-		#imageFilePicker.SetInitialDirectory() # asset directory from plugins?
-		sizer.Add(imageFilePicker, wx.SizerFlags(0))
+		self.sizerTop.Add(imageFilePicker, wx.SizerFlags(0).Expand())
 		
-		# may change the below to sys.argv stuff for when its compiled
-		choices = [plugin.getName() for plugin in self.plugins]
-		self.command = wx.Choice(
+		# spacer
+		self.sizerTop.Add(0, 0, 1)
+		
+		# choose command
+		self.command = ChoiceInput(
 			parent=self,
-			choices=choices
+			title="Command",
+			choices=[plugin.getName() for plugin in self.plugins],
+			onChangeChoice=self.handleChangeCommand
 		)
-		sizer.Add(self.command, wx.SizerFlags(0))
+		self.sizerTop.Add(self.command, wx.SizerFlags(0).Expand())
 		
-		self.command.Bind(wx.EVT_CHOICE, self.changeCommand)
+		# sizer to hold properties
+		self.sizerBottom = wx.StaticBoxSizer(wx.VERTICAL, self)
+		self.sizerBottom.GetStaticBox().Hide()
+		mainSizer.Add(self.sizerBottom, wx.SizerFlags(1).Expand().ReserveSpaceEvenIfHidden())
 		
-	def changeCommand(self, evt):
-		plugin = self.plugins[self.command.GetSelection()]
+		wx.CallAfter(self.afterInit)
 		
-		# something to do with plugins.getProperties()
+	def afterInit(self):
+		self.sizerTop.SetMinSize(wx.Size(self.sizerTop.GetMinSize().width, self.sizerTop.GetSize().height))
+		self.GetSizer().GetItem(self.sizerTop).SetProportion(0)
 		
+	def handleChangeCommand(self, selection):
+		self.sizerBottom.Clear(True)
+	
+		plugin = self.plugins[selection]
+		
+		# spacer
+		self.sizerBottom.Add(0, 0, 1)
+		
+		for property in plugin.getProperties():
+			propertyType = plugin.getPropertyType(property)
+			if propertyType == "choice":
+				userInput = ChoiceInput(
+					parent=self,
+					title=property,
+					choices=plugin.getPropertySettings(property),
+					onChangeChoice=None
+				)
+			elif propertyType == "file":
+				userInput = FileInput(
+					parent=self,
+					title=property,
+					wildcard=plugin.getPropertySettings(property)
+				)
+			self.sizerBottom.Add(userInput, wx.SizerFlags(0).Expand())
+						
+			# spacer
+			self.sizerBottom.Add(0, 0, 1)
+		
+		self.sizerBottom.SetMinSize(wx.Size(self.sizerBottom.GetMinSize().width, self.sizerBottom.GetItem(1).GetSize().height*self.sizerBottom.GetItemCount()//2*1.5))
+		self.sizerBottom.GetStaticBox().Show()
 		self.GetSizer().Layout()
+		self.SetupScrolling()

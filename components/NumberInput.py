@@ -30,11 +30,11 @@ class NumberInput(wx.Panel):
 		)
 		sizer.Add(btnLeft, wx.SizerFlags(1).Expand())
 		
-		self.txt = TextElement(
+		self.text = TextElement(
 			parent=self,
 			value=value
 		)
-		sizer.Add(self.txt, wx.SizerFlags(2).Expand())
+		sizer.Add(self.text, wx.SizerFlags(2).Expand())
 		
 		btnRight = CustomButton(
 			parent=self,
@@ -47,4 +47,4 @@ class NumberInput(wx.Panel):
 	
 	def render(self, value):
 		self.value = value
-		self.txt.render(value)
+		self.text.render(value)
