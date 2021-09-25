@@ -121,5 +121,6 @@ class MainFrame(wx.Frame):
 	def handleSyncButtonClick(self):
 		self.onSyncImage()
 		
-	def handleSaveIconButton(self):
+	def handleSaveIconButton(self, info):
 		print("handle save icon button")
+		print(info)

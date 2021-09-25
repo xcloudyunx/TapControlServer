@@ -5,7 +5,7 @@ from config import colors
 from components.Label import Label
 
 class FileInput(wx.Panel):    
-	def __init__(self, parent, title, wildcard):
+	def __init__(self, parent, title, wildcard, onChangeFile):
 		super().__init__(parent=parent)
 		
 		sizer = wx.BoxSizer()
@@ -29,3 +29,6 @@ class FileInput(wx.Panel):
 		sizer.Add(filePicker, wx.SizerFlags(8).Expand())
 		
 		sizer.Add(0, 0, wx.SizerFlags(1).Expand())
+		
+		filePicker.Bind(wx.EVT_FILEPICKER_CHANGED, lambda evt : onChangeFile(title, filePicker.GetPath()))
+		

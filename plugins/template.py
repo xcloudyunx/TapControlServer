@@ -9,7 +9,8 @@ __properties = {
 	],
 	"property2":[
 		"file",
-		"filetypename (*.extension1,*.extension2)|*.extension1;*.extension2"
+		"(*.png)|*.png"
+		# "filetypename (*.extension1,*.extension2,...)|*.extension1;*.extension2;..."
 	]
 }
 # user typing???

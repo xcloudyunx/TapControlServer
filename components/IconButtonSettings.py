@@ -11,9 +11,11 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 	def __init__(self, parent, id, className, plugins):
 		super().__init__(parent=parent)
 		
-		self.SetBackgroundColour(colors.secondary)
+		self.info = {}
 		
 		self.plugins = plugins
+		
+		self.SetBackgroundColour(colors.secondary)
 		
 		# main sizer
 		mainSizer = wx.BoxSizer(wx.VERTICAL)
@@ -42,7 +44,8 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 		imageFilePicker = FileInput(
 			parent=self,
 			title="Icon",
-			wildcard="Images (*.png,*.jpg)|*.png;*.jpg"
+			wildcard="Images (*.png,*.jpg)|*.png;*.jpg",
+			onChangeFile=lambda : None
 		)
 		self.sizerTop.Add(imageFilePicker, wx.SizerFlags(0).Expand())
 		
@@ -53,7 +56,7 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 		self.command = ChoiceInput(
 			parent=self,
 			title="Command",
-			choices=[plugin.getName() for plugin in self.plugins],
+			choices=[plugin for plugin in self.plugins],
 			onChangeChoice=self.handleChangeCommand
 		)
 		self.sizerTop.Add(self.command, wx.SizerFlags(0).Expand())
@@ -69,10 +72,12 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 		self.sizerTop.SetMinSize(wx.Size(self.sizerTop.GetMinSize().width, self.sizerTop.GetSize().height))
 		self.GetSizer().GetItem(self.sizerTop).SetProportion(0)
 		
-	def handleChangeCommand(self, selection):
+	def handleChangeCommand(self, title, pluginName):
 		self.sizerBottom.Clear(True)
-	
-		plugin = self.plugins[selection]
+		
+		self.info["name"] = pluginName
+		
+		plugin = self.plugins[pluginName]
 		
 		# spacer
 		self.sizerBottom.Add(0, 0, 1)
@@ -84,13 +89,14 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 					parent=self,
 					title=property,
 					choices=plugin.getPropertySettings(property),
-					onChangeChoice=None
+					onChangeChoice=self.handleChangeProperty
 				)
 			elif propertyType == "file":
 				userInput = FileInput(
 					parent=self,
 					title=property,
-					wildcard=plugin.getPropertySettings(property)
+					wildcard=plugin.getPropertySettings(property),
+					onChangeFile=self.handleChangeProperty
 				)
 			self.sizerBottom.Add(userInput, wx.SizerFlags(0).Expand())
 						
@@ -101,3 +107,9 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 		self.sizerBottom.GetStaticBox().Show()
 		self.GetSizer().Layout()
 		self.SetupScrolling()
+		
+	def handleChangeProperty(self, property, propertyValue):
+		self.info[property] = propertyValue
+	
+	def retreiveInfo(self):
+		return self.info

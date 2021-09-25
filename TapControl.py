@@ -6,10 +6,10 @@ from Server import Server
 from components.Plugin import Plugin
 
 def main():
-	plugins = [
-		Plugin(plugin)
-		for plugin in os.listdir("./plugins")
-	]
+	plugins = {}
+	for file in os.listdir("./plugins"):
+		plugin = Plugin(file)
+		plugins[plugin.getName()] = plugin
 
 	server = Server()
 	server.start()

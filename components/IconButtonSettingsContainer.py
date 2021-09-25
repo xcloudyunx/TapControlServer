@@ -54,13 +54,13 @@ class IconButtonSettingsContainer(wx.Panel):
 		sizerCentre.Add(0, 0, 1)
 		
 		# main element
-		iconButtonSettings = IconButtonSettings(
+		self.iconButtonSettings = IconButtonSettings(
 			parent=self,
 			id=id,
 			className=className,
 			plugins=plugins
 		)
-		sizerCentre.Add(iconButtonSettings, wx.SizerFlags(20).Expand())
+		sizerCentre.Add(self.iconButtonSettings, wx.SizerFlags(20).Expand())
 		
 		# spacer
 		sizerCentre.Add(0, 0, 1)
@@ -79,7 +79,7 @@ class IconButtonSettingsContainer(wx.Panel):
 		saveButton = CustomButton(
 			parent=self,
 			value="Save",
-			onClick=handleSaveButtonClick
+			onClick=self.handleSaveButtonClick
 		)
 		sizerBottom.Add(saveButton, wx.SizerFlags(1))
 		
@@ -88,3 +88,7 @@ class IconButtonSettingsContainer(wx.Panel):
 		
 		# spacer
 		mainSizer.Add(0, 0, 1)
+	
+	def handleSaveButtonClick(self, evt):
+		# retreive values from iconbuttonsettings
+		self.onSaveIconButton(self.iconButtonSettings.retreiveInfo())
