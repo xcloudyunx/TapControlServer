@@ -3,7 +3,7 @@ import wx.lib.scrolledpanel
 
 from config import colors
 
-from components.IconButton import IconButton
+from components.DummyIconButton import DummyIconButton
 from components.FileInput import FileInput
 from components.ChoiceInput import ChoiceInput
 
@@ -28,12 +28,11 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 		self.sizerTop.Add(0, 0, 1)
 		
 		# preview icon image
-		self.icon = IconButton(
+		self.icon = DummyIconButton(
 			parent=self,
 			id=id,
 			className=className,
 			buttonDim=100, #still need to decide on this size
-			onClick=lambda className, id : None
 		)
 		self.sizerTop.Add(self.icon, wx.SizerFlags(0).Centre())
 		
@@ -45,7 +44,7 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 			parent=self,
 			title="Icon",
 			wildcard="Images (*.png,*.jpg)|*.png;*.jpg",
-			onChangeFile=lambda : None
+			onChangeFile=lambda _, path : self.icon.update(path)
 		)
 		self.sizerTop.Add(imageFilePicker, wx.SizerFlags(0).Expand())
 		
@@ -112,4 +111,5 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 		self.info[property] = propertyValue
 	
 	def retreiveInfo(self):
+		self.icon.saveImage()
 		return self.info

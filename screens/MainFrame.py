@@ -124,3 +124,4 @@ class MainFrame(wx.Frame):
 	def handleSaveIconButton(self, info):
 		print("handle save icon button")
 		print(info)
+		self.renderMainBar()
