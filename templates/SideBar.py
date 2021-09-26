@@ -2,12 +2,12 @@ import wx
 
 from config import colors
 
-from components.ConnectionArea import ConnectionArea
-from components.IconButtonSettingsContainer import IconButtonSettingsContainer
-from components.GridSettings import GridSettings
+from organisms.ConnectionArea import ConnectionArea
+from organisms.IconButtonSettingsContainer import IconButtonSettingsContainer
+from organisms.GridSettings import GridSettings
 
 class SideBar(wx.Panel):    
-	def __init__(self, parent, onGridSettingsClick, onGridSettingsSave, numOfRows, numOfCols, numOfPages):
+	def __init__(self, parent,  onGridSettingsSave, numOfRows, numOfCols, numOfPages):
 		super().__init__(parent=parent)
 		
 		self.SetBackgroundColour(colors.primary)
@@ -17,7 +17,6 @@ class SideBar(wx.Panel):
 		
 		self.gridSettings = GridSettings(
 			parent=self,
-			onGridSettingsClick=onGridSettingsClick,
 			onGridSettingsSave=onGridSettingsSave,
 			numOfRows=numOfRows,
 			numOfCols=numOfCols,

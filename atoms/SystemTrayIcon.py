@@ -9,9 +9,7 @@ class SystemTrayIcon(wx.adv.TaskBarIcon):
 		self.frame = frame
  
 		# create tray icon
-		bmp = wx.Bitmap("assets/default.png", wx.BITMAP_TYPE_ANY)
-		self.icon = wx.Icon(bmp)
-		self.SetIcon(self.icon, "Remote")
+		self.SetIcon(wx.Icon("assets/default.png"), "Tap Control")
 		
 		# actions for left and right click
 		self.Bind(wx.adv.EVT_TASKBAR_LEFT_UP, self.open)
@@ -24,7 +22,7 @@ class SystemTrayIcon(wx.adv.TaskBarIcon):
 		# menu has two options, restore and exit
 		# may add more options in the future
 		# add "Top Secret Control Panel" like discord?
-		menu = wx.Menu("Remote")
+		menu = wx.Menu("Tap Control")
 		menu.Append(0, "Open")
 		menu.Append(1, "Exit")
 		self.Bind(wx.EVT_MENU, self.open, menu.FindItemById(0))

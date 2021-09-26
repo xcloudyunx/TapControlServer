@@ -1,8 +1,6 @@
 import wx
 
-from config import colors
-
-from components.Label import Label
+from atoms.Label import Label
 
 class FileInput(wx.Panel):    
 	def __init__(self, parent, title, wildcard, onChangeFile):
@@ -19,16 +17,18 @@ class FileInput(wx.Panel):
 		)
 		sizer.Add(label, wx.SizerFlags(6).Expand())
 		
-		filePicker = wx.FilePickerCtrl(
+		self.filePicker = wx.FilePickerCtrl(
 			parent=self,
 			wildcard=wildcard,
 			size=wx.Size(1, 1)
 		)
 		# print(imageFilePicker.GetPath())
 		#imageFilePicker.SetInitialDirectory() # asset directory from plugins?
-		sizer.Add(filePicker, wx.SizerFlags(8).Expand())
+		sizer.Add(self.filePicker, wx.SizerFlags(8).Expand())
 		
 		sizer.Add(0, 0, wx.SizerFlags(1).Expand())
 		
-		filePicker.Bind(wx.EVT_FILEPICKER_CHANGED, lambda evt : onChangeFile(title, filePicker.GetPath()))
-		
+		self.filePicker.Bind(wx.EVT_FILEPICKER_CHANGED, lambda evt : onChangeFile(title, self.filePicker.GetPath()))
+	
+	def reset(self):
+		self.filePicker.SetPath("")

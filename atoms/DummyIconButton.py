@@ -1,7 +1,6 @@
 import wx
 import os
 
-from config import colors
 from config import constants
 
 class DummyIconButton(wx.Panel):
@@ -25,12 +24,13 @@ class DummyIconButton(wx.Panel):
 		self.GetSizer().Add(self.btn, wx.SizerFlags(0).Centre())
 		
 	def update(self, source):
+		self.source = source
 		if source:
-			self.source = source
 			bmp = self.createScaledImage(source, self.buttonDim)
 		else:
 			bmp = wx.Bitmap()
 		self.btn.SetBitmap(bmp)
+		self.btn.Refresh()
 		
 	def createScaledImage(self, source, containerSize):
 		img = wx.Image(source, wx.BITMAP_TYPE_ANY)
@@ -40,6 +40,10 @@ class DummyIconButton(wx.Panel):
 		return bmp
 		
 	def saveImage(self):
-		bmp = self.createScaledImage(self.source, constants.iconButtonSize)
-		bmp.SaveFile("assets/"+str(self.className)+"-"+str(self.id)+".png", wx.BITMAP_TYPE_PNG)
-		
+		if self.source:
+			bmp = self.createScaledImage(self.source, constants.iconButtonSize)
+			bmp.SaveFile("assets/"+str(self.className)+"-"+str(self.id)+".png", wx.BITMAP_TYPE_PNG)
+		elif not self.btn.GetBitmap():
+			source = "assets/"+str(self.className)+"-"+str(self.id)+".png"
+			if os.path.exists(source):
+				os.remove(source)

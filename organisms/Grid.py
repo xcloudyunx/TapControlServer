@@ -2,7 +2,7 @@ import wx
 
 from config import colors
 
-from components.Row import Row
+from molecules.Row import Row
 
 class Grid(wx.Panel):
 	def __init__(self, parent, className, numOfRows, numOfCols, onClick):

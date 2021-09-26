@@ -3,7 +3,7 @@ import os
 import App
 from Server import Server
 
-from components.Plugin import Plugin
+from atoms.Plugin import Plugin
 
 def main():
 	plugins = {}

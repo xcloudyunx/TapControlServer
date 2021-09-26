@@ -3,9 +3,10 @@ import wx.lib.scrolledpanel
 
 from config import colors
 
-from components.DummyIconButton import DummyIconButton
-from components.FileInput import FileInput
-from components.ChoiceInput import ChoiceInput
+from atoms.CustomButton import CustomButton
+from atoms.DummyIconButton import DummyIconButton
+from molecules.FileInput import FileInput
+from molecules.ChoiceInput import ChoiceInput
 
 class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):    
 	def __init__(self, parent, id, className, plugins):
@@ -27,6 +28,10 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 		# spacer
 		self.sizerTop.Add(0, 0, 1)
 		
+		# first row
+		sizerRow = wx.BoxSizer()
+		self.sizerTop.Add(sizerRow, wx.SizerFlags(0).Expand())
+		
 		# preview icon image
 		self.icon = DummyIconButton(
 			parent=self,
@@ -34,19 +39,25 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 			className=className,
 			buttonDim=100, #still need to decide on this size
 		)
-		self.sizerTop.Add(self.icon, wx.SizerFlags(0).Centre())
+		sizerRow.Add(self.icon, wx.SizerFlags(0).Centre())
+		
+		removeIconButton = CustomButton(
+			parent=self,
+			value="Remove Icon",
+			onClick=self.handleRemoveIconImage
+		)
 		
 		# spacer
 		self.sizerTop.Add(0, 0, 1)
 		
 		# file picker for icon image
-		imageFilePicker = FileInput(
+		self.imageFilePicker = FileInput(
 			parent=self,
 			title="Icon",
 			wildcard="Images (*.png,*.jpg)|*.png;*.jpg",
 			onChangeFile=lambda _, path : self.icon.update(path)
 		)
-		self.sizerTop.Add(imageFilePicker, wx.SizerFlags(0).Expand())
+		self.sizerTop.Add(self.imageFilePicker, wx.SizerFlags(0).Expand())
 		
 		# spacer
 		self.sizerTop.Add(0, 0, 1)
@@ -109,6 +120,11 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 		
 	def handleChangeProperty(self, property, propertyValue):
 		self.info[property] = propertyValue
+		
+	def handleRemoveIconImage(self, evt):
+		self.imageFilePicker.reset()
+		self.icon.update(None)
+		
 	
 	def retreiveInfo(self):
 		self.icon.saveImage()

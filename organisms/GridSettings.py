@@ -3,14 +3,16 @@ import wx
 from config import colors
 from config import constants
 
-from components.NumberInput import NumberInput
-from components.CustomButton import CustomButton
+from atoms.CustomButton import CustomButton
+from molecules.NumberInput import NumberInput
 
 class GridSettings(wx.Panel):    
-	def __init__(self, parent, onGridSettingsClick, onGridSettingsSave, numOfRows, numOfCols, numOfPages):
+	def __init__(self, parent, onGridSettingsSave, numOfRows, numOfCols, numOfPages):
 		super().__init__(parent=parent)
 		
-		self.onGridSettingsClick = onGridSettingsClick
+		self.numOfRows = numOfRows
+		self.numOfCols = numOfCols
+		self.numOfPages = numOfPages
 		
 		self.SetBackgroundColour(colors.secondary)
 		
@@ -61,7 +63,7 @@ class GridSettings(wx.Panel):
 		saveButton = CustomButton(
 			parent=self,
 			value="Save",
-			onClick=lambda evt : onGridSettingsSave()
+			onClick=lambda evt : onGridSettingsSave(self.numOfRows, self.numOfCols, self.numOfPages)
 		)
 		sizer.Add(saveButton, wx.SizerFlags(0).Centre())
 		
@@ -71,12 +73,11 @@ class GridSettings(wx.Panel):
 	def handleGridSettingsClick(self, type, val):
 		val = max(val, 1);
 		if type == "numOfRows":
-			val = min(constants.rowMax, val)
-			self.r.render(val)
+			self.numOfRows = min(constants.rowMax, val)
+			self.r.render(self.numOfRows)
 		elif type == "numOfCols":
-			val = min(constants.colMax, val)
-			self.c.render(val)
+			self.numOfCols = min(constants.colMax, val)
+			self.c.render(self.numOfCols)
 		elif type == "numOfPages":
-			val = min(constants.pageMax, val)
-			self.p.render(val)
-		self.onGridSettingsClick(type, val)
+			self.numOfPages = min(constants.pageMax, val)
+			self.p.render(self.numOfPages)

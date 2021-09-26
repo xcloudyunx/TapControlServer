@@ -1,8 +1,6 @@
 import wx
 
-from config import colors
-
-from components.Label import Label
+from atoms.Label import Label
 
 class ChoiceInput(wx.Panel):    
 	def __init__(self, parent, title, choices, onChangeChoice):

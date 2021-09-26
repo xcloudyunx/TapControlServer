@@ -2,9 +2,9 @@ import wx
 
 from config import colors
 
-from components.CustomButton import CustomButton
-from components.TextElement import TextElement
-from components.Grid import Grid
+from atoms.CustomButton import CustomButton
+from atoms.TextElement import TextElement
+from organisms.Grid import Grid
 
 class MainBar(wx.Panel):    
 	def __init__(self, parent, onChangePageButtonClick):

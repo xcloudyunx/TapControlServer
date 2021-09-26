@@ -1,7 +1,6 @@
 import wx
 import os
 
-from config import colors
 from config import constants
 
 class IconButton(wx.Panel):

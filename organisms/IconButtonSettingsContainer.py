@@ -1,9 +1,9 @@
 import wx
 
-from components.CustomButton import CustomButton
-from components.TextElement import TextElement
-from components.Heading import Heading
-from components.IconButtonSettings import IconButtonSettings
+from atoms.CustomButton import CustomButton
+from atoms.TextElement import TextElement
+from atoms.Heading import Heading
+from organisms.IconButtonSettings import IconButtonSettings
 
 class IconButtonSettingsContainer(wx.Panel):    
 	def __init__(self, parent, className, id, numOfCols, onExitClick, onSaveIconButton, plugins):

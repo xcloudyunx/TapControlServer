@@ -1,10 +1,8 @@
 import wx
 
-from config import colors
-
-from components.Label import Label
-from components.TextElement import TextElement
-from components.CustomButton import CustomButton
+from atoms.Label import Label
+from atoms.TextElement import TextElement
+from atoms.CustomButton import CustomButton
 
 class NumberInput(wx.Panel):    
 	def __init__(self, parent, title, value, onClick):

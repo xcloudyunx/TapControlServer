@@ -4,8 +4,8 @@ import qrcode
 from config import colors
 from config import constants
 
-from components.TextElement import TextElement
-from components.CustomButton import CustomButton
+from atoms.TextElement import TextElement
+from atoms.CustomButton import CustomButton
 
 class ConnectionArea(wx.Panel):
 	def __init__(self, parent, onSyncButtonClick):

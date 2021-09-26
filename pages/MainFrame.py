@@ -4,18 +4,20 @@ import json
 from config import colors
 from config import constants
 
-from components.MainBar import MainBar
-from components.SideBar import SideBar
-from components.SystemTrayIcon import SystemTrayIcon
+from templates.MainBar import MainBar
+from templates.SideBar import SideBar
+from atoms.SystemTrayIcon import SystemTrayIcon
 
 class MainFrame(wx.Frame):    
 	def __init__(self, plugins, onSyncGrid, onSyncImage):
 		super().__init__(
 			parent=None,
-			title="Remote Server",
+			title="Tap Control",
 			size=(600, 600),
 			style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
 		)
+		
+		self.SetIcon(wx.Icon("assets/default.png"))
 		
 		self.plugins = plugins
 		self.onSyncGrid = onSyncGrid
@@ -44,7 +46,6 @@ class MainFrame(wx.Frame):
 		
 		self.sideBar = SideBar(
 			parent=self,
-			onGridSettingsClick=self.handleGridSettingsClick,
 			onGridSettingsSave=self.handleGridSettingsSave,
 			numOfRows=self.state["numOfRows"],
 			numOfCols=self.state["numOfCols"],
@@ -99,13 +100,6 @@ class MainFrame(wx.Frame):
 			self.currentPage = newPage
 			self.renderMainBar()
 	
-	def handleGridSettingsClick(self, type, val):
-		self.state[type] = val
-		if type == "numOfPages":
-			if (self.currentPage > val):
-				self.currentPage = val;
-		self.renderMainBar()
-	
 	def handleExitClick(self):
 		self.buttonClassName = 0
 		self.renderSideBar()
@@ -113,7 +107,13 @@ class MainFrame(wx.Frame):
 	def handleCloseButton(self, evt):
 		self.Hide()
 		
-	def handleGridSettingsSave(self):
+	def handleGridSettingsSave(self, numOfRows, numOfCols, numOfPages):
+		self.state["numOfRows"] = numOfRows
+		self.state["numOfCols"] = numOfCols
+		self.state["numOfPages"] = numOfPages
+		if (self.currentPage > numOfPages):
+			self.currentPage = numOfPages;
+		self.renderMainBar()
 		with open("assets/state.json", "w") as file:
 			file.write(json.dumps(self.state))
 		self.onSyncGrid(self.state)

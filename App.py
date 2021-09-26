@@ -1,7 +1,7 @@
 import wx.lib.inspection
 import wx
 
-from screens.MainFrame import MainFrame
+from pages.MainFrame import MainFrame
 
 def startApp(plugins, onSyncGrid, onSyncImage):
 	app = wx.App()
