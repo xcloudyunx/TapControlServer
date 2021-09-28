@@ -3,7 +3,7 @@ import wx
 from atoms.Label import Label
 
 class ChoiceInput(wx.Panel):    
-	def __init__(self, parent, title, choices, onChangeChoice):
+	def __init__(self, parent, title, choices, onChangeChoice, default=None):
 		super().__init__(parent=parent)
 		
 		sizer = wx.BoxSizer()
@@ -22,6 +22,9 @@ class ChoiceInput(wx.Panel):
 			choices=choices
 		)
 		sizer.Add(choice, wx.SizerFlags(8).Expand())
+		if default:
+			choice.SetSelection(choices.index(default))
+			onChangeChoice(title, default, True)
 		
 		sizer.Add(0, 0, wx.SizerFlags(1).Expand())
 		

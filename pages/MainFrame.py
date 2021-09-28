@@ -9,7 +9,7 @@ from templates.SideBar import SideBar
 from atoms.SystemTrayIcon import SystemTrayIcon
 
 class MainFrame(wx.Frame):    
-	def __init__(self, plugins, onSyncGrid, onSyncImage):
+	def __init__(self, plugins, onSync, onIconButtonUpdate):
 		super().__init__(
 			parent=None,
 			title="Tap Control",
@@ -20,11 +20,16 @@ class MainFrame(wx.Frame):
 		self.SetIcon(wx.Icon("assets/default.png"))
 		
 		self.plugins = plugins
-		self.onSyncGrid = onSyncGrid
-		self.onSyncImage = onSyncImage
+		self.onSync = onSync
+		self.onIconButtonUpdate = onIconButtonUpdate
+		
+		# commands 
+		# not required, less file opening and closing, potentially more efficient?
+		with open("config/commands.json", "r") as file:
+			self.commands = json.loads(file.read())
 		
 		# states
-		with open("assets/state.json", "r") as file:
+		with open("config/state.json", "r") as file:
 			self.state = json.loads(file.read())
 		
 		self.currentPage = 1
@@ -86,7 +91,8 @@ class MainFrame(wx.Frame):
 			onExitClick=self.handleExitClick,
 			onSaveIconButton=self.handleSaveIconButton,
 			onSyncButtonClick=self.handleSyncButtonClick,
-			plugins=self.plugins
+			plugins=self.plugins,
+			commands=self.commands
 		)
 		
 	def handleIconButtonClick(self, page, id):
@@ -114,14 +120,20 @@ class MainFrame(wx.Frame):
 		if (self.currentPage > numOfPages):
 			self.currentPage = numOfPages;
 		self.renderMainBar()
-		with open("assets/state.json", "w") as file:
+		with open("config/state.json", "w") as file:
 			file.write(json.dumps(self.state))
-		self.onSyncGrid(self.state)
 			
 	def handleSyncButtonClick(self):
-		self.onSyncImage()
+		self.onSync()
 		
 	def handleSaveIconButton(self, info):
-		print("handle save icon button")
-		print(info)
-		self.renderMainBar()
+		self.buttonClassName = 0
+		self.render()
+		self.onIconButtonUpdate(dict(info))
+		page = info.pop("page")
+		id = info.pop("id")
+		plugin = info.pop("name", None)
+		if plugin:
+			self.commands[page][id] = [plugin, info]
+		else:
+			self.commands[page].pop(id, None)

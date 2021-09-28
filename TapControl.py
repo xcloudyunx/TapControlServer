@@ -11,12 +11,12 @@ def main():
 		plugin = Plugin(file)
 		plugins[plugin.getName()] = plugin
 
-	server = Server()
+	server = Server(plugins)
 	server.start()
 	App.startApp(
 		plugins=plugins,
-		onSyncGrid=server.handleSyncGrid,
-		onSyncImage=server.handleSyncImage
+		onSync=server.handleSync,
+		onIconButtonUpdate=server.handleIconButtonUpdate
 	)
 
 if __name__ == "__main__":

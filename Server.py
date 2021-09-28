@@ -6,8 +6,12 @@ import hashlib
 from config import constants
 
 class Server(threading.Thread):
-	def __init__(self):
+	def __init__(self, plugins):
 		super().__init__(daemon=True)
+		
+		self.plugins = plugins
+		with open("config/commands.json", "r") as file:
+			self.commands = json.loads(file.read())
 		
 		self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.server.bind(constants.ADDRESS)
@@ -21,26 +25,41 @@ class Server(threading.Thread):
 			c = True
 			print("accepted")
 			
-			self.checkSync()
+			# self.checkSync()
 
 			while c:
 				data = self.receiveMessage()
 				print(data)
 				
+	def handleIconButtonUpdate(self, info):
+		page = info.pop("page")
+		id = info.pop("id")
+		plugin = info.pop("name", None)
+		if plugin:
+			self.commands[page][id] = [plugin, info]
+		else:
+			self.commands[page].pop(id, None)
+		with open("config/commands.json", "w") as file:
+			file.write(json.dumps(self.commands))
+				
 	def checkSync(self):
-		with open("assets/state.json", "r") as file:
+		with open("config/state.json", "r") as file:
 			self.state = json.loads(file.read())
 		self.sendMessage('{"hash":"'+self.hash(self.state)+'"}')
 		synced = bool(self.receiveMessage())
 		if not synced:
 			handleSyncGrid(self.state)
+			
+	def handleSync(self):
+		# sync
+		pass
 				
-	def handleSyncGrid(self, state):
+	def syncGrid(self, state):
 		self.state = state
 		if self.conn:
 			self.sendMessage(json.dumps(self.state))
 		
-	def handleSyncImage(self):
+	def syncImage(self):
 		if self.conn:
 			# sync the image
 			pass

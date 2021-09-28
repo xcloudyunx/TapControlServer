@@ -24,7 +24,7 @@ class SideBar(wx.Panel):
 		)
 		sizer.Add(self.gridSettings, wx.SizerFlags(1).Expand())
 	
-	def render(self, className, id, numOfCols, onExitClick, onSaveIconButton, onSyncButtonClick, plugins):
+	def render(self, className, id, numOfCols, onExitClick, onSaveIconButton, onSyncButtonClick, plugins, commands):
 		try:
 			self.element.Destroy()
 		except:
@@ -37,7 +37,8 @@ class SideBar(wx.Panel):
 				numOfCols=numOfCols,
 				onExitClick=onExitClick,
 				onSaveIconButton=onSaveIconButton,
-				plugins=plugins
+				plugins=plugins,
+				defaultValues=commands[str(className)][str(id)] if str(id) in commands[str(className)] else None if str(className) in commands else None
 			)
 		else:
 			self.element = ConnectionArea(

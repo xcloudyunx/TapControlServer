@@ -6,7 +6,7 @@ from atoms.Heading import Heading
 from organisms.IconButtonSettings import IconButtonSettings
 
 class IconButtonSettingsContainer(wx.Panel):    
-	def __init__(self, parent, className, id, numOfCols, onExitClick, onSaveIconButton, plugins):
+	def __init__(self, parent, className, id, numOfCols, onExitClick, onSaveIconButton, plugins, defaultValues):
 		super().__init__(parent=parent)
 		
 		self.onSaveIconButton = onSaveIconButton
@@ -56,9 +56,10 @@ class IconButtonSettingsContainer(wx.Panel):
 		# main element
 		self.iconButtonSettings = IconButtonSettings(
 			parent=self,
-			id=id,
-			className=className,
-			plugins=plugins
+			id=str(id),
+			className=str(className),
+			plugins=plugins,
+			defaultValues=defaultValues
 		)
 		sizerCentre.Add(self.iconButtonSettings, wx.SizerFlags(20).Expand())
 		

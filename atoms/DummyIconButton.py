@@ -1,5 +1,6 @@
 import wx
 import os
+import json
 
 from config import constants
 
@@ -15,7 +16,7 @@ class DummyIconButton(wx.Panel):
 		sizer = wx.BoxSizer()
 		self.SetSizer(sizer)
 		
-		source = "assets/"+str(className)+"-"+str(id)+".png"
+		source = "assets/"+self.className+"-"+self.id+".png"
 		if os.path.exists(source):
 			bmp = self.createScaledImage(source, buttonDim)
 		else:
@@ -40,10 +41,16 @@ class DummyIconButton(wx.Panel):
 		return bmp
 		
 	def saveImage(self):
+		with open("config/updates.json", "r") as file:
+			data = json.loads(file.read())
+		source = "assets/"+self.className+"-"+self.id+".png"
 		if self.source:
 			bmp = self.createScaledImage(self.source, constants.iconButtonSize)
-			bmp.SaveFile("assets/"+str(self.className)+"-"+str(self.id)+".png", wx.BITMAP_TYPE_PNG)
+			bmp.SaveFile(source, wx.BITMAP_TYPE_PNG)
+			data[str(self.className)+"-"+str(self.id)] = True
 		elif not self.btn.GetBitmap():
-			source = "assets/"+str(self.className)+"-"+str(self.id)+".png"
 			if os.path.exists(source):
 				os.remove(source)
+				data[self.className+"-"+self.id] = False
+		with open("config/updates.json", "w") as file:
+			file.write(json.dumps(data))

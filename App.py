@@ -3,12 +3,12 @@ import wx
 
 from pages.MainFrame import MainFrame
 
-def startApp(plugins, onSyncGrid, onSyncImage):
+def startApp(plugins, onSync, onIconButtonUpdate):
 	app = wx.App()
 	frame = MainFrame(
 		plugins=plugins,
-		onSyncGrid=onSyncGrid,
-		onSyncImage=onSyncImage
+		onSync=onSync,
+		onIconButtonUpdate=onIconButtonUpdate
 	)
 	# wx.lib.inspection.InspectionTool().Show()
 	app.MainLoop()

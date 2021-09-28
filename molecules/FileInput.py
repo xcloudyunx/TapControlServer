@@ -3,7 +3,7 @@ import wx
 from atoms.Label import Label
 
 class FileInput(wx.Panel):    
-	def __init__(self, parent, title, wildcard, onChangeFile):
+	def __init__(self, parent, title, wildcard, onChangeFile, default=None):
 		super().__init__(parent=parent)
 		
 		sizer = wx.BoxSizer()
@@ -25,6 +25,9 @@ class FileInput(wx.Panel):
 		# print(imageFilePicker.GetPath())
 		#imageFilePicker.SetInitialDirectory() # asset directory from plugins?
 		sizer.Add(self.filePicker, wx.SizerFlags(8).Expand())
+		if default:
+			self.filePicker.SetPath(default)
+			onChangeFile(title, default, True)
 		
 		sizer.Add(0, 0, wx.SizerFlags(1).Expand())
 		

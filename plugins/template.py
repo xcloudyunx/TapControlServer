@@ -3,6 +3,11 @@ import json
 
 __name = "template"
 __properties = {
+	# reserved property names
+	# page
+	# id
+	# name
+	# image
 	"property1":[
 		"choice",
 		["option1", "option2"]
