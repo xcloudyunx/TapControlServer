@@ -28,6 +28,7 @@ class MainFrame(wx.Frame):
 		# states
 		self.state = state
 		
+		self.originalNumOfPages = self.state["numOfPages"]
 		self.currentPage = 1
 		self.buttonClassName = None
 		self.buttonID = None
@@ -41,16 +42,19 @@ class MainFrame(wx.Frame):
 		
 		self.mainBar = MainBar(
 			parent=self,
-			onChangePageButtonClick=self.handlePageChange
+			state=self.state,
+			onChangePageButtonClick=self.handlePageChange,
+			onIconButtonClick=self.handleIconButtonClick
 		)
 		sizer.Add(self.mainBar, wx.SizerFlags(1).Expand())
 		
 		self.sideBar = SideBar(
 			parent=self,
+			state=self.state,
 			onGridSettingsSave=self.handleGridSettingsSave,
-			numOfRows=self.state["numOfRows"],
-			numOfCols=self.state["numOfCols"],
-			numOfPages=self.state["numOfPages"]
+			onExitClick=self.handleExitClick,
+			onSaveIconButton=self.handleSaveIconButton,
+			onSyncButtonClick=self.handleSyncButtonClick
 		)
 		sizer.Add(self.sideBar, wx.SizerFlags(1).Expand())
 		
@@ -72,21 +76,13 @@ class MainFrame(wx.Frame):
 		
 	def renderMainBar(self):
 		self.mainBar.render(
-			numOfRows=self.state["numOfRows"],
-			numOfCols=self.state["numOfCols"],
-			numOfPages=self.state["numOfPages"],
-			currentPage=self.currentPage,
-			onIconButtonClick=self.handleIconButtonClick
+			currentPage=self.currentPage
 		)
 		
 	def renderSideBar(self):
 		self.sideBar.render(
 			className=self.buttonClassName,
 			id=self.buttonID,
-			numOfCols=self.state["numOfCols"],
-			onExitClick=self.handleExitClick,
-			onSaveIconButton=self.handleSaveIconButton,
-			onSyncButtonClick=self.handleSyncButtonClick,
 			plugins=self.plugins,
 			commands=self.commands
 		)
@@ -109,19 +105,18 @@ class MainFrame(wx.Frame):
 	def handleCloseButton(self, evt):
 		self.Hide()
 		
-	def handleGridSettingsSave(self, numOfRows, numOfCols, numOfPages):
-		self.state["numOfRows"] = numOfRows
-		self.state["numOfCols"] = numOfCols
-		if self.state["numOfPages"] != numOfPages:
-			for i in range(self.state["numOfPages"], numOfPages+1):
-				self.commands[str(i)] = {}
-			for i in range(numOfPages+1, self.state["numOfPages"]+1):
+	def handleGridSettingsSave(self):
+		if self.state["numOfPages"] != self.originalNumOfPages:
+			for i in range(self.state["numOfPages"]+1, self.originalNumOfPages+1):
+				print("remove"+str(i))
 				del self.commands[str(i)]
+			for i in range(self.originalNumOfPages+1, self.state["numOfPages"]+1):
+				self.commands[str(i)] = {}
 			with open("config/commands.json", "w") as file:
 				file.write(json.dumps(self.commands))
-			self.state["numOfPages"] = numOfPages
-		if (self.currentPage > numOfPages):
-			self.currentPage = numOfPages
+			self.originalNumOfPages = self.state["numOfPages"]
+		if (self.currentPage > self.state["numOfPages"]):
+			self.currentPage = self.state["numOfPages"]
 		self.renderMainBar()
 		with open("config/state.json", "w") as file:
 			file.write(json.dumps(self.state))

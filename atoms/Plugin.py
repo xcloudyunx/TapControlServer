@@ -18,10 +18,13 @@ class Plugin():
 		return self.properties
 	
 	def getPropertyType(self, property):
-		return self.properties[property][0]
+		return self.properties[property]["type"]
+		
+	def isPropertyRequired(self, property):
+		return self.properties[property]["required"]
 		
 	def getPropertySettings(self, property):
-		return self.properties[property][1]
+		return self.properties[property]["settings"]
 		
 	def run(properties):
 		# process = subprocess.Popen(["python", "./plugins/"+file, "--setup"])

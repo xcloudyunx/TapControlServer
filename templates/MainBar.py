@@ -7,8 +7,12 @@ from atoms.TextElement import TextElement
 from organisms.Grid import Grid
 
 class MainBar(wx.Panel):    
-	def __init__(self, parent, onChangePageButtonClick):
+	def __init__(self, parent, state, onChangePageButtonClick, onIconButtonClick):
 		super().__init__(parent=parent)
+		
+		self.state = state
+		
+		self.onIconButtonClick = onIconButtonClick
 		
 		# main sizer that contains everything
 		mainSizer = wx.BoxSizer()
@@ -45,7 +49,7 @@ class MainBar(wx.Panel):
 		)
 		mainSizer.Add(self.btnRight, wx.SizerFlags(1).Centre())
 	
-	def render(self, numOfRows, numOfCols, numOfPages, currentPage, onIconButtonClick):
+	def render(self, currentPage):
 		# stored for changing page
 		self.currentPage = currentPage
 		
@@ -57,12 +61,12 @@ class MainBar(wx.Panel):
 		self.grid = Grid(
 			parent=self,
 			className=currentPage,
-			numOfRows=numOfRows,
-			numOfCols=numOfCols,
-			onClick=onIconButtonClick
+			numOfRows=self.state["numOfRows"],
+			numOfCols=self.state["numOfCols"],
+			onClick=self.onIconButtonClick
 		)
 		self.sizer.Insert(0, self.grid, wx.SizerFlags(30).Expand())
 		self.sizer.Layout()
 		
 		# update text elements
-		self.txt.render(str(currentPage)+"/"+str(numOfPages))
+		self.txt.render(str(currentPage)+"/"+str(self.state["numOfPages"]))

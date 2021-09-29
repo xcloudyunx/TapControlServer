@@ -4,6 +4,7 @@ from atoms.CustomButton import CustomButton
 from atoms.TextElement import TextElement
 from atoms.Heading import Heading
 from organisms.IconButtonSettings import IconButtonSettings
+from pages.RequiredDialogBox import RequiredDialogBox
 
 class IconButtonSettingsContainer(wx.Panel):    
 	def __init__(self, parent, className, id, numOfCols, onExitClick, onSaveIconButton, plugins, defaultValues):
@@ -91,5 +92,12 @@ class IconButtonSettingsContainer(wx.Panel):
 		mainSizer.Add(0, 0, 1)
 	
 	def handleSaveButtonClick(self, evt):
-		# retreive values from iconbuttonsettings
-		self.onSaveIconButton(self.iconButtonSettings.retreiveInfo())
+		# retrieve values
+		info = self.iconButtonSettings.retreiveInfo()
+	
+		# only save if all required fields have been filled
+		if info:
+			self.onSaveIconButton(info)
+		else:
+			# popup dialog saying to fill in all required fields
+			RequiredDialogBox(self)

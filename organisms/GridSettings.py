@@ -7,12 +7,10 @@ from atoms.CustomButton import CustomButton
 from molecules.NumberInput import NumberInput
 
 class GridSettings(wx.Panel):    
-	def __init__(self, parent, onGridSettingsSave, numOfRows, numOfCols, numOfPages):
+	def __init__(self, parent, state, onGridSettingsSave):
 		super().__init__(parent=parent)
 		
-		self.numOfRows = numOfRows
-		self.numOfCols = numOfCols
-		self.numOfPages = numOfPages
+		self.state = state
 		
 		self.SetBackgroundColour(colors.secondary)
 		
@@ -27,7 +25,7 @@ class GridSettings(wx.Panel):
 		self.r = NumberInput(
 			parent=self,
 			title="Rows",
-			value=numOfRows,
+			value=self.state["numOfRows"],
 			onClick=lambda val : self.handleGridSettingsClick("numOfRows", val)
 		)
 		sizer.Add(self.r, wx.SizerFlags(2).Expand())
@@ -39,7 +37,7 @@ class GridSettings(wx.Panel):
 		self.c = NumberInput(
 			parent=self,
 			title="Columns",
-			value=numOfCols,
+			value=self.state["numOfCols"],
 			onClick=lambda val : self.handleGridSettingsClick("numOfCols", val)
 		)
 		sizer.Add(self.c, wx.SizerFlags(2).Expand())
@@ -51,7 +49,7 @@ class GridSettings(wx.Panel):
 		self.p = NumberInput(
 			parent=self,
 			title="Pages",
-			value=numOfPages,
+			value=self.state["numOfPages"],
 			onClick=lambda val : self.handleGridSettingsClick("numOfPages", val)
 		)
 		sizer.Add(self.p, wx.SizerFlags(2).Expand())
@@ -63,7 +61,7 @@ class GridSettings(wx.Panel):
 		saveButton = CustomButton(
 			parent=self,
 			value="Save",
-			onClick=lambda evt : onGridSettingsSave(self.numOfRows, self.numOfCols, self.numOfPages)
+			onClick=lambda evt : onGridSettingsSave()
 		)
 		sizer.Add(saveButton, wx.SizerFlags(0).Centre())
 		
@@ -73,11 +71,11 @@ class GridSettings(wx.Panel):
 	def handleGridSettingsClick(self, type, val):
 		val = max(val, 1);
 		if type == "numOfRows":
-			self.numOfRows = min(constants.rowMax, val)
-			self.r.render(self.numOfRows)
+			self.state["numOfRows"] = min(constants.rowMax, val)
+			self.r.render(self.state["numOfRows"])
 		elif type == "numOfCols":
-			self.numOfCols = min(constants.colMax, val)
-			self.c.render(self.numOfCols)
+			self.state["numOfCols"] = min(constants.colMax, val)
+			self.c.render(self.state["numOfCols"])
 		elif type == "numOfPages":
-			self.numOfPages = min(constants.pageMax, val)
-			self.p.render(self.numOfPages)
+			self.state["numOfPages"] = min(constants.pageMax, val)
+			self.p.render(self.state["numOfPages"])

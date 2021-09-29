@@ -16,7 +16,7 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 		
 		self.plugins = plugins
 		
-		self.defaultValues = defaultValues
+		self.defaultValues = defaultValues[1] if defaultValues else None
 		
 		self.SetBackgroundColour(colors.secondary)
 		
@@ -116,7 +116,8 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 							title=property,
 							choices=plugin.getPropertySettings(property),
 							onChangeChoice=self.handleChangeProperty,
-							default=self.defaultValues[1][property] if default else None
+							default=(self.defaultValues[property] if property in self.defaultValues else None) if default else None,
+							required=plugin.isPropertyRequired(property)
 						)
 					elif propertyType == "file":
 						userInput = FileInput(
@@ -124,7 +125,8 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 							title=property,
 							wildcard=plugin.getPropertySettings(property),
 							onChangeFile=self.handleChangeProperty,
-							default=self.defaultValues[1][property] if default else None
+							default=(self.defaultValues[property] if property in self.defaultValues else None) if default else None,
+							required=plugin.isPropertyRequired(property)
 						)
 					self.sizerBottom.Add(userInput, wx.SizerFlags(0).Expand())
 								
@@ -147,5 +149,17 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 		self.icon.update(None)
 	
 	def retreiveInfo(self):
-		self.icon.saveImage()
-		return self.info
+		if self.checkRequired():
+			self.icon.saveImage()
+			return self.info
+		else:
+			return False
+		
+	def checkRequired(self):
+		pluginName = self.info["name"]
+		if pluginName:
+			plugin = self.plugins[pluginName]
+			for property in plugin.getProperties():
+				if plugin.isPropertyRequired(property) and property not in self.info:
+					return False
+		return True

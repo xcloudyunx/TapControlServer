@@ -71,8 +71,8 @@ class Server(threading.Thread):
 		splitData = data.split()
 		page = splitData[0]
 		id = splitData[1]
-		self.run(page, id)
+		self.execute(page, id)
 		
-	def run(self, page, id):
+	def execute(self, page, id):
 		if id in self.commands[page]:
 			self.plugins.run(self.commands[page][id])

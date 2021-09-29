@@ -3,7 +3,7 @@ import wx
 from atoms.Label import Label
 
 class FileInput(wx.Panel):    
-	def __init__(self, parent, title, wildcard, onChangeFile, default=None):
+	def __init__(self, parent, title, wildcard, onChangeFile, default=None, required=False):
 		super().__init__(parent=parent)
 		
 		sizer = wx.BoxSizer()
@@ -13,7 +13,7 @@ class FileInput(wx.Panel):
 		
 		label = Label(
 			parent=self,
-			value=title+":"
+			value=("*" if required else "")+title+":"
 		)
 		sizer.Add(label, wx.SizerFlags(6).Expand())
 		

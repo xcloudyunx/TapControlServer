@@ -8,15 +8,17 @@ __properties = {
 	# id
 	# name
 	# image
-	"property1":[
-		"choice",
-		["option1", "option2"]
-	],
-	"property2":[
-		"file",
-		"(*.png)|*.png"
-		# "filetypename (*.extension1,*.extension2,...)|*.extension1;*.extension2;..."
-	]
+	"property1":{
+		"type":"choice",
+		"required":True,
+		"settings":["option1", "option2"]
+	},
+	"property2":{
+		"type":"file",
+		"required":False,
+		"settings":"(*.png)|*.png"
+		# "wildcard":"filetypename (*.extension1,*.extension2,...)|*.extension1;*.extension2;..."
+	}
 }
 # user typing???
 # recording macro????
@@ -31,5 +33,3 @@ for i in range(1, len(sys.argv)):
 	if sys.argv[i] == "--setup":
 		print(getName())
 		print(getProperties())
-	else:
-		
