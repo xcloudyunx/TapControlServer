@@ -4,9 +4,10 @@ import json
 from config import colors
 from config import constants
 
+from atoms.SystemTrayIcon import SystemTrayIcon
 from templates.MainBar import MainBar
 from templates.SideBar import SideBar
-from atoms.SystemTrayIcon import SystemTrayIcon
+from pages.SyncDialogBox import SyncDialogBox
 
 class MainFrame(wx.Frame):    
 	def __init__(self, plugins, commands, state, onSync):
@@ -113,10 +114,12 @@ class MainFrame(wx.Frame):
 			
 	def handleSyncButtonClick(self):
 		# create dialog box saying syncing
-		success = self.onSync()
-		if not success:
-			# notify that not connected
-			print("not connected")
+		syncDialogBox = SyncDialogBox()
+		success = self.onSync(syncDialogBox)
+		if success == False:
+			syncDialogBox.Update(100, "No client detected.")
+		elif success:
+			syncDialogBox.Update(100, "Synced successfully.")
 		
 	def handleSaveIconButton(self, info):
 		self.buttonClassName = 0

@@ -1,7 +1,5 @@
 import wx
 
-from config import colors
-
 class RequiredDialogBox(wx.MessageDialog):
 	def __init__(self, parent):
 		super().__init__(

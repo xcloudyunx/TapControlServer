@@ -16,7 +16,7 @@ class SideBar(wx.Panel):
 		
 		self.onExitClick = onExitClick
 		self.onSaveIconButton = onSaveIconButton
-		self.onSyncButtonClick = onSaveIconButton
+		self.onSyncButtonClick = onSyncButtonClick
 		
 		self.SetBackgroundColour(colors.primary)
 		

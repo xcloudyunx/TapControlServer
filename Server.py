@@ -42,14 +42,23 @@ class Server(threading.Thread):
 		# if not synced:
 			# handleSyncGrid(self.state)
 			
-	def handleSync(self):
+	def handleSync(self, syncDialogBox):
 		if self.conn:
 			with self.lock:
 				self.syncGrid()
 				with open("config/updates.json") as file:
 					data = json.loads(file.read())
+				percentageGain = 100/(len(data)+1)
+				currentPercent = percentageGain
+				if not syncDialogBox.Update(currentPercent):
+					return None
+				currentPercent += percentageGain
 				for image in data:
 					self.syncImage(image if data[image] else None)
+					if not syncDialogBox.Update(currentPercent):
+						return None
+					currentPercent += percentageGain
+					
 			return True
 		else:
 			return False
