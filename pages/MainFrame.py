@@ -50,7 +50,9 @@ class MainFrame(wx.Frame):
 		
 		self.sideBar = SideBar(
 			parent=self,
-			state=self.state,
+			state=self.state,,
+			plugins=self.plugins,
+			commands=self.commands
 			onGridSettingsSave=self.handleGridSettingsSave,
 			onExitClick=self.handleExitClick,
 			onSaveIconButton=self.handleSaveIconButton,
@@ -82,9 +84,7 @@ class MainFrame(wx.Frame):
 	def renderSideBar(self):
 		self.sideBar.render(
 			className=self.buttonClassName,
-			id=self.buttonID,
-			plugins=self.plugins,
-			commands=self.commands
+			id=self.buttonID
 		)
 		
 	def handleIconButtonClick(self, page, id):
@@ -108,7 +108,6 @@ class MainFrame(wx.Frame):
 	def handleGridSettingsSave(self):
 		if self.state["numOfPages"] != self.originalNumOfPages:
 			for i in range(self.state["numOfPages"]+1, self.originalNumOfPages+1):
-				print("remove"+str(i))
 				del self.commands[str(i)]
 			for i in range(self.originalNumOfPages+1, self.state["numOfPages"]+1):
 				self.commands[str(i)] = {}
