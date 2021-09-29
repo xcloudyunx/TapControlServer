@@ -50,13 +50,11 @@ class Server(threading.Thread):
 					data = json.loads(file.read())
 				percentageGain = 100/(len(data)+1)
 				currentPercent = percentageGain
-				if not syncDialogBox.Update(currentPercent):
-					return None
+				syncDialogBox.Update(currentPercent, "Syncing grid..."):
 				currentPercent += percentageGain
 				for image in data:
 					self.syncImage(image if data[image] else None)
-					if not syncDialogBox.Update(currentPercent):
-						return None
+					syncDialogBox.Update(currentPercent, "Syncing icons..."):
 					currentPercent += percentageGain
 					
 			return True
