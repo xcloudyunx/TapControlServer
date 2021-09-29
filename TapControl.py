@@ -15,8 +15,9 @@ def main():
 	server.start()
 	App.startApp(
 		plugins=plugins,
-		onSync=server.handleSync,
-		onIconButtonUpdate=server.handleIconButtonUpdate
+		commands=server.commands,
+		state=server.state,
+		onSync=server.handleSync
 	)
 
 if __name__ == "__main__":

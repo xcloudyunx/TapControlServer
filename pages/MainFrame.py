@@ -9,7 +9,7 @@ from templates.SideBar import SideBar
 from atoms.SystemTrayIcon import SystemTrayIcon
 
 class MainFrame(wx.Frame):    
-	def __init__(self, plugins, onSync, onIconButtonUpdate):
+	def __init__(self, plugins, commands, state, onSync):
 		super().__init__(
 			parent=None,
 			title="Tap Control",
@@ -21,16 +21,12 @@ class MainFrame(wx.Frame):
 		
 		self.plugins = plugins
 		self.onSync = onSync
-		self.onIconButtonUpdate = onIconButtonUpdate
 		
 		# commands 
-		# not required, less file opening and closing, potentially more efficient?
-		with open("config/commands.json", "r") as file:
-			self.commands = json.loads(file.read())
+		self.commands = commands
 		
 		# states
-		with open("config/state.json", "r") as file:
-			self.state = json.loads(file.read())
+		self.state = state
 		
 		self.currentPage = 1
 		self.buttonClassName = None
@@ -116,9 +112,16 @@ class MainFrame(wx.Frame):
 	def handleGridSettingsSave(self, numOfRows, numOfCols, numOfPages):
 		self.state["numOfRows"] = numOfRows
 		self.state["numOfCols"] = numOfCols
-		self.state["numOfPages"] = numOfPages
+		if self.state["numOfPages"] != numOfPages:
+			for i in range(self.state["numOfPages"], numOfPages+1):
+				self.commands[str(i)] = {}
+			for i in range(numOfPages+1, self.state["numOfPages"]+1):
+				del self.commands[str(i)]
+			with open("config/commands.json", "w") as file:
+				file.write(json.dumps(self.commands))
+			self.state["numOfPages"] = numOfPages
 		if (self.currentPage > numOfPages):
-			self.currentPage = numOfPages;
+			self.currentPage = numOfPages
 		self.renderMainBar()
 		with open("config/state.json", "w") as file:
 			file.write(json.dumps(self.state))
@@ -129,7 +132,6 @@ class MainFrame(wx.Frame):
 	def handleSaveIconButton(self, info):
 		self.buttonClassName = 0
 		self.render()
-		self.onIconButtonUpdate(dict(info))
 		page = info.pop("page")
 		id = info.pop("id")
 		plugin = info.pop("name", None)
@@ -137,3 +139,5 @@ class MainFrame(wx.Frame):
 			self.commands[page][id] = [plugin, info]
 		else:
 			self.commands[page].pop(id, None)
+		with open("config/commands.json", "w") as file:
+			file.write(json.dumps(self.commands))

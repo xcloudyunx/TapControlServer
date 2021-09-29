@@ -22,3 +22,8 @@ class Plugin():
 		
 	def getPropertySettings(self, property):
 		return self.properties[property][1]
+		
+	def run(properties):
+		# process = subprocess.Popen(["python", "./plugins/"+file, "--setup"])
+		process = subprocess.Popen(["python", "./plugins/"+file]+["--"+properties[i] if i%2 else properties[i] for i in range(len(properties))], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		out, err = process.communicate()

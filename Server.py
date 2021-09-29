@@ -12,6 +12,9 @@ class Server(threading.Thread):
 		self.plugins = plugins
 		with open("config/commands.json", "r") as file:
 			self.commands = json.loads(file.read())
+			
+		with open("config/state.json", "r") as file:
+			self.state = json.loads(file.read())
 		
 		self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.server.bind(constants.ADDRESS)
@@ -29,22 +32,9 @@ class Server(threading.Thread):
 
 			while c:
 				data = self.receiveMessage()
-				print(data)
-				
-	def handleIconButtonUpdate(self, info):
-		page = info.pop("page")
-		id = info.pop("id")
-		plugin = info.pop("name", None)
-		if plugin:
-			self.commands[page][id] = [plugin, info]
-		else:
-			self.commands[page].pop(id, None)
-		with open("config/commands.json", "w") as file:
-			file.write(json.dumps(self.commands))
+				thread = threading.Thread(target=self.handleData, args=(data,))
 				
 	def checkSync(self):
-		with open("config/state.json", "r") as file:
-			self.state = json.loads(file.read())
 		self.sendMessage('{"hash":"'+self.hash(self.state)+'"}')
 		synced = bool(self.receiveMessage())
 		if not synced:
@@ -75,3 +65,14 @@ class Server(threading.Thread):
 	
 	def hash(self, obj):
 		return hashlib.sha256(json.dumps(obj).encode()).hexdigest()
+		
+	def handleData(self, data):
+		print(data)
+		splitData = data.split()
+		page = splitData[0]
+		id = splitData[1]
+		self.run(page, id)
+		
+	def run(self, page, id):
+		if id in self.commands[page]:
+			self.plugins.run(self.commands[page][id])

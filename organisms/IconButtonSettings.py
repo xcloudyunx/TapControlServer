@@ -83,7 +83,7 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 		self.command = ChoiceInput(
 			parent=self,
 			title="Command",
-			choices=[plugin for plugin in self.plugins],
+			choices=[""]+[plugin for plugin in self.plugins],
 			onChangeChoice=self.handleChangeCommand,
 			default=defaultValues[0] if defaultValues else None
 		)
@@ -102,40 +102,44 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 			
 			self.info["name"] = pluginName
 			
-			plugin = self.plugins[pluginName]
-			
-			# spacer
-			self.sizerBottom.Add(0, 0, 1)
-			
-			for property in plugin.getProperties():
-				propertyType = plugin.getPropertyType(property)
-				if propertyType == "choice":
-					userInput = ChoiceInput(
-						parent=self,
-						title=property,
-						choices=plugin.getPropertySettings(property),
-						onChangeChoice=self.handleChangeProperty,
-						default=self.defaultValues[1][property] if default else None
-					)
-				elif propertyType == "file":
-					userInput = FileInput(
-						parent=self,
-						title=property,
-						wildcard=plugin.getPropertySettings(property),
-						onChangeFile=self.handleChangeProperty,
-						default=self.defaultValues[1][property] if default else None
-					)
-				self.sizerBottom.Add(userInput, wx.SizerFlags(0).Expand())
-							
+			if pluginName:
+				plugin = self.plugins[pluginName]
+				
 				# spacer
 				self.sizerBottom.Add(0, 0, 1)
-			
-			self.sizerBottom.SetMinSize(wx.Size(self.sizerBottom.GetMinSize().width, self.sizerBottom.GetItem(1).GetSize().height*self.sizerBottom.GetItemCount()//2*1.5))
-			self.sizerBottom.GetStaticBox().Show()
-			self.GetSizer().Layout()
-			self.SetupScrolling()
+				
+				for property in plugin.getProperties():
+					propertyType = plugin.getPropertyType(property)
+					if propertyType == "choice":
+						userInput = ChoiceInput(
+							parent=self,
+							title=property,
+							choices=plugin.getPropertySettings(property),
+							onChangeChoice=self.handleChangeProperty,
+							default=self.defaultValues[1][property] if default else None
+						)
+					elif propertyType == "file":
+						userInput = FileInput(
+							parent=self,
+							title=property,
+							wildcard=plugin.getPropertySettings(property),
+							onChangeFile=self.handleChangeProperty,
+							default=self.defaultValues[1][property] if default else None
+						)
+					self.sizerBottom.Add(userInput, wx.SizerFlags(0).Expand())
+								
+					# spacer
+					self.sizerBottom.Add(0, 0, 1)
+				
+				self.sizerBottom.SetMinSize(wx.Size(self.sizerBottom.GetMinSize().width, self.sizerBottom.GetItem(1).GetSize().height*self.sizerBottom.GetItemCount()//2*1.5))
+				self.sizerBottom.GetStaticBox().Show()
+				self.GetSizer().Layout()
+				self.SetupScrolling()
+			else:
+				self.sizerBottom.GetStaticBox().Hide()
+				self.GetSizer().Layout()
 		
-	def handleChangeProperty(self, property, propertyValue, _):
+	def handleChangeProperty(self, property, propertyValue, _=None):
 		self.info[property] = propertyValue
 		
 	def handleRemoveIconImage(self, evt):

@@ -31,3 +31,5 @@ for i in range(1, len(sys.argv)):
 	if sys.argv[i] == "--setup":
 		print(getName())
 		print(getProperties())
+	else:
+		
