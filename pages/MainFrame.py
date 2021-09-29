@@ -112,7 +112,11 @@ class MainFrame(wx.Frame):
 			file.write(json.dumps(self.state))
 			
 	def handleSyncButtonClick(self):
-		self.onSync()
+		# create dialog box saying syncing
+		success = self.onSync()
+		if not success:
+			# notify that not connected
+			print("not connected")
 		
 	def handleSaveIconButton(self, info):
 		self.buttonClassName = 0

@@ -9,6 +9,8 @@ class Server(threading.Thread):
 	def __init__(self, plugins):
 		super().__init__(daemon=True)
 		
+		self.lock = threading.Lock()
+		
 		self.plugins = plugins
 		with open("config/commands.json", "r") as file:
 			self.commands = json.loads(file.read())
@@ -34,26 +36,31 @@ class Server(threading.Thread):
 				data = self.receiveMessage()
 				thread = threading.Thread(target=self.handleData, args=(data,))
 				
-	def checkSync(self):
-		self.sendMessage('{"hash":"'+self.hash(self.state)+'"}')
-		synced = bool(self.receiveMessage())
-		if not synced:
-			handleSyncGrid(self.state)
+	# def checkSync(self):
+		# self.sendMessage('{"hash":"'+self.hash(self.state)+'"}')
+		# synced = bool(self.receiveMessage())
+		# if not synced:
+			# handleSyncGrid(self.state)
 			
 	def handleSync(self):
-		self.syncGrid()
+		if self.conn:
+			with self.lock:
+				self.syncGrid()
+				with open("config/updates.json") as file:
+					data = json.loads(file.read())
+				for image in data:
+					self.syncImage(image if data[image] else None)
+			return True
+		else:
+			return False
 				
 	def syncGrid(self):
-		if self.conn:
-			self.sendMessage(json.dumps(self.state))
+		self.sendMessage(json.dumps(self.state))
 		
-	def syncImage(self):
-		if self.conn:
-			# sync the image
-			pass
-		else:
-			# add to sync file
-			pass
+	def syncImage(self, fileName):
+		with open("assets/"+fileName+".png", "rb") as file:
+			data = {fileName:file.read()}
+		self.sendMessage(json.dumps(data))
 		
 	def receiveMessage(self):
 		return self.conn.recv(constants.MSGSIZE).decode()
