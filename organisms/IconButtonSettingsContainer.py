@@ -57,8 +57,7 @@ class IconButtonSettingsContainer(wx.Panel):
 		# main element
 		self.iconButtonSettings = IconButtonSettings(
 			parent=self,
-			id=str(id),
-			className=str(className),
+			id=str(className)+"-"+str(id),
 			plugins=plugins,
 			defaultValues=defaultValues
 		)

@@ -41,11 +41,9 @@ class Server(threading.Thread):
 			handleSyncGrid(self.state)
 			
 	def handleSync(self):
-		# sync
-		pass
+		self.syncGrid()
 				
-	def syncGrid(self, state):
-		self.state = state
+	def syncGrid(self):
 		if self.conn:
 			self.sendMessage(json.dumps(self.state))
 		
@@ -68,11 +66,8 @@ class Server(threading.Thread):
 		
 	def handleData(self, data):
 		print(data)
-		splitData = data.split()
-		page = splitData[0]
-		id = splitData[1]
-		self.execute(page, id)
+		self.execute(data)
 		
-	def execute(self, page, id):
-		if id in self.commands[page]:
-			self.plugins.run(self.commands[page][id])
+	def execute(self, id):
+		if id in self.commands:
+			self.plugins.run(self.commands[id])

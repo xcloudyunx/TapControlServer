@@ -44,7 +44,7 @@ class SideBar(wx.Panel):
 				onExitClick=self.onExitClick,
 				onSaveIconButton=self.onSaveIconButton,
 				plugins=self.plugins,
-				defaultValues=self.commands[str(className)][str(id)] if str(id) in commands[str(className)] else None if str(className) in commands else None
+				defaultValues=self.commands[str(className)+"-"+str(id)] if str(className)+"-"+str(id) in self.commands else None
 			)
 		else:
 			self.element = ConnectionArea(

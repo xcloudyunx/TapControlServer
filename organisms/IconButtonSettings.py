@@ -1,5 +1,6 @@
 import wx
 import wx.lib.scrolledpanel
+import json
 
 from config import colors
 
@@ -9,10 +10,10 @@ from molecules.FileInput import FileInput
 from molecules.ChoiceInput import ChoiceInput
 
 class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):    
-	def __init__(self, parent, id, className, plugins, defaultValues):
+	def __init__(self, parent, id, plugins, defaultValues):
 		super().__init__(parent=parent)
 		
-		self.info = {"page": className, "id": id, "name": None}
+		self.info = {"id": id, "name": None}
 		
 		self.plugins = plugins
 		
@@ -40,8 +41,7 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 		# preview icon image
 		self.icon = DummyIconButton(
 			parent=self,
-			id=id,
-			className=className,
+			id=self.info["id"],
 			buttonDim=100, #still need to decide on this size
 		)
 		sizerRow.Add(self.icon, wx.SizerFlags(0).Centre())

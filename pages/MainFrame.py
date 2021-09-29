@@ -28,7 +28,6 @@ class MainFrame(wx.Frame):
 		# states
 		self.state = state
 		
-		self.originalNumOfPages = self.state["numOfPages"]
 		self.currentPage = 1
 		self.buttonClassName = None
 		self.buttonID = None
@@ -50,9 +49,9 @@ class MainFrame(wx.Frame):
 		
 		self.sideBar = SideBar(
 			parent=self,
-			state=self.state,,
+			state=self.state,
 			plugins=self.plugins,
-			commands=self.commands
+			commands=self.commands,
 			onGridSettingsSave=self.handleGridSettingsSave,
 			onExitClick=self.handleExitClick,
 			onSaveIconButton=self.handleSaveIconButton,
@@ -106,14 +105,6 @@ class MainFrame(wx.Frame):
 		self.Hide()
 		
 	def handleGridSettingsSave(self):
-		if self.state["numOfPages"] != self.originalNumOfPages:
-			for i in range(self.state["numOfPages"]+1, self.originalNumOfPages+1):
-				del self.commands[str(i)]
-			for i in range(self.originalNumOfPages+1, self.state["numOfPages"]+1):
-				self.commands[str(i)] = {}
-			with open("config/commands.json", "w") as file:
-				file.write(json.dumps(self.commands))
-			self.originalNumOfPages = self.state["numOfPages"]
 		if (self.currentPage > self.state["numOfPages"]):
 			self.currentPage = self.state["numOfPages"]
 		self.renderMainBar()
@@ -126,12 +117,11 @@ class MainFrame(wx.Frame):
 	def handleSaveIconButton(self, info):
 		self.buttonClassName = 0
 		self.render()
-		page = info.pop("page")
 		id = info.pop("id")
 		plugin = info.pop("name", None)
 		if plugin:
-			self.commands[page][id] = [plugin, info]
+			self.commands[id] = [plugin, info]
 		else:
-			self.commands[page].pop(id, None)
+			self.commands.pop(id, None)
 		with open("config/commands.json", "w") as file:
 			file.write(json.dumps(self.commands))
