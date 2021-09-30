@@ -36,6 +36,7 @@ class Server(threading.Thread):
 			while c:
 				data = self.receiveMessage()
 				thread = threading.Thread(target=self.handleData, args=(data,))
+				thread.start()
 				
 	# def checkSync(self):
 		# self.sendMessage('{"hash":"'+self.hash(self.state)+'"}')
