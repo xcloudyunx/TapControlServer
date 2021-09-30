@@ -116,9 +116,7 @@ class MainFrame(wx.Frame):
 		# create dialog box saying syncing
 		syncDialogBox = SyncDialogBox()
 		success = self.onSync(syncDialogBox)
-		if success:
-			syncDialogBox.Update(100, "Synced successfully.")
-		else:
+		if not success:
 			syncDialogBox.Update(100, "No client detected.")
 		
 	def handleSaveIconButton(self, info):

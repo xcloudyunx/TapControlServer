@@ -37,6 +37,3 @@ class ConnectionArea(wx.Panel):
 		sizer.Add(syncButton, wx.SizerFlags(0).Centre())
 		
 		sizer.Add(0, 0, wx.SizerFlags(1))
-	
-	def render(self):
-		pass
