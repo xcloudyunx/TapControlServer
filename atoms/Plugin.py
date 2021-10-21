@@ -3,6 +3,8 @@ import json
 
 class Plugin():
 	def __init__(self, file):
+		self.file = file
+		
 		# remove the python when compiling as it will be exe
 		process = subprocess.Popen(["python", "./plugins/"+file, "--setup"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		out, err = process.communicate()
@@ -26,7 +28,9 @@ class Plugin():
 	def getPropertySettings(self, property):
 		return self.properties[property]["settings"]
 		
-	def run(properties):
-		# process = subprocess.Popen(["python", "./plugins/"+file, "--setup"])
-		process = subprocess.Popen(["python", "./plugins/"+file]+["--"+properties[i] if i%2 else properties[i] for i in range(len(properties))], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+	def run(self, properties):
+		# use os.system("whatever")
+		# can keep this for now for debugging
+		process = subprocess.Popen(["python", "./plugins/"+self.file]+[element for propvalue in [[prop, properties[prop]] for prop in properties] for element in propvalue], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		out, err = process.communicate()
+		print(out.decode())

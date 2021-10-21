@@ -73,7 +73,6 @@ class Server(threading.Thread):
 		data = {"imageName":fileName}
 		if updateImage:
 			with open("assets/"+fileName+".png", "rb") as file:
-				# print(base64.b64encode(file.read()).decode())
 				data["imageData"] = base64.b64encode(file.read()).decode()
 		else:
 			data["imageData"] = None
@@ -94,4 +93,5 @@ class Server(threading.Thread):
 		
 	def execute(self, id):
 		if id in self.commands:
-			self.plugins.run(self.commands[id])
+			command = self.commands[id]
+			self.plugins[command[0]].run(command[1])
