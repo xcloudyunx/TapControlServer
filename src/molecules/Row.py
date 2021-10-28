@@ -1,6 +1,6 @@
 import wx
 
-from atoms.IconButton import IconButton
+from src.atoms.IconButton import IconButton
 
 class Row(wx.Panel):
 	def __init__(self, parent, id, className, numOfCols, buttonDim, onClick):

@@ -3,8 +3,8 @@ import wx
 from config import colors
 from config import constants
 
-from atoms.CustomButton import CustomButton
-from molecules.NumberInput import NumberInput
+from src.atoms.CustomButton import CustomButton
+from src.molecules.NumberInput import NumberInput
 
 class GridSettings(wx.Panel):    
 	def __init__(self, parent, state, onGridSettingsSave):

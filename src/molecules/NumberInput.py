@@ -1,8 +1,8 @@
 import wx
 
-from atoms.Label import Label
-from atoms.TextElement import TextElement
-from atoms.CustomButton import CustomButton
+from src.atoms.Label import Label
+from src.atoms.TextElement import TextElement
+from src.atoms.CustomButton import CustomButton
 
 class NumberInput(wx.Panel):    
 	def __init__(self, parent, title, value, onClick):

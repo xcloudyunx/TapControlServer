@@ -1,9 +1,9 @@
 import os
 
-import App
-from Server import Server
+import src.App as App
+from src.Server import Server
 
-from atoms.Plugin import Plugin
+from src.atoms.Plugin import Plugin
 
 def main():
 	plugins = {}

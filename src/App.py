@@ -1,7 +1,7 @@
 import wx.lib.inspection
 import wx
 
-from pages.MainFrame import MainFrame
+from src.pages.MainFrame import MainFrame
 
 def startApp(plugins, commands, state, onSync):
 	app = wx.App()

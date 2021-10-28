@@ -1,10 +1,10 @@
 import wx
 
-from atoms.CustomButton import CustomButton
-from atoms.TextElement import TextElement
-from atoms.Heading import Heading
-from organisms.IconButtonSettings import IconButtonSettings
-from pages.RequiredDialogBox import RequiredDialogBox
+from src.atoms.CustomButton import CustomButton
+from src.atoms.TextElement import TextElement
+from src.atoms.Heading import Heading
+from src.organisms.IconButtonSettings import IconButtonSettings
+from src.pages.RequiredDialogBox import RequiredDialogBox
 
 class IconButtonSettingsContainer(wx.Panel):    
 	def __init__(self, parent, className, id, numOfCols, onExitClick, onSaveIconButton, plugins, defaultValues):

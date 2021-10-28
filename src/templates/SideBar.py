@@ -2,9 +2,9 @@ import wx
 
 from config import colors
 
-from organisms.ConnectionArea import ConnectionArea
-from organisms.IconButtonSettingsContainer import IconButtonSettingsContainer
-from organisms.GridSettings import GridSettings
+from src.organisms.ConnectionArea import ConnectionArea
+from src.organisms.IconButtonSettingsContainer import IconButtonSettingsContainer
+from src.organisms.GridSettings import GridSettings
 
 class SideBar(wx.Panel):    
 	def __init__(self, parent, state, plugins, commands, onGridSettingsSave, onExitClick, onSaveIconButton, onSyncButtonClick):

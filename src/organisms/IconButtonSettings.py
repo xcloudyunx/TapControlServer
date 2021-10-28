@@ -4,10 +4,10 @@ import json
 
 from config import colors
 
-from atoms.CustomButton import CustomButton
-from atoms.DummyIconButton import DummyIconButton
-from molecules.FileInput import FileInput
-from molecules.ChoiceInput import ChoiceInput
+from src.atoms.CustomButton import CustomButton
+from src.atoms.DummyIconButton import DummyIconButton
+from src.molecules.FileInput import FileInput
+from src.molecules.ChoiceInput import ChoiceInput
 
 class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):    
 	def __init__(self, parent, id, plugins, defaultValues):

@@ -1,6 +1,6 @@
 import wx
 
-from atoms.Label import Label
+from src.atoms.Label import Label
 
 class ChoiceInput(wx.Panel):    
 	def __init__(self, parent, title, choices, onChangeChoice, default=None, required=False):

@@ -4,10 +4,10 @@ import json
 from config import colors
 from config import constants
 
-from atoms.SystemTrayIcon import SystemTrayIcon
-from templates.MainBar import MainBar
-from templates.SideBar import SideBar
-from pages.SyncDialogBox import SyncDialogBox
+from src.atoms.SystemTrayIcon import SystemTrayIcon
+from src.templates.MainBar import MainBar
+from src.templates.SideBar import SideBar
+from src.pages.SyncDialogBox import SyncDialogBox
 
 class MainFrame(wx.Frame):    
 	def __init__(self, plugins, commands, state, onSync):
