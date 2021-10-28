@@ -4,7 +4,7 @@ import os
 from config import constants
 
 class IconButton(wx.Panel):
-	def __init__(self, parent, id, className, buttonDim, onClick):
+	def __init__(self, parent, page, rowIndex, colIndex, buttonDim, onClick):
 		super().__init__(parent=parent)
 		
 		self.buttonDim = buttonDim
@@ -12,7 +12,7 @@ class IconButton(wx.Panel):
 		sizer = wx.BoxSizer()
 		self.SetSizer(sizer)
 		
-		source = "assets/"+str(className)+"-"+str(id)+".png"
+		source = "assets/"+page+"-"+rowIndex+"-"+colIndex+".png"
 		if os.path.exists(source):
 			bmp = self.createScaledImage(source)
 		else:
@@ -20,7 +20,7 @@ class IconButton(wx.Panel):
 		btn = wx.BitmapButton(parent=self, bitmap=bmp, size=wx.Size(buttonDim, buttonDim))
 		self.GetSizer().Add(btn, wx.SizerFlags(0).Centre())
 		
-		btn.Bind(wx.EVT_BUTTON, lambda evt : onClick(className, id))
+		btn.Bind(wx.EVT_BUTTON, lambda evt : onClick(page, rowIndex, colIndex))
 	
 	def createScaledImage(self, source):
 		img = wx.Image(source, wx.BITMAP_TYPE_ANY)

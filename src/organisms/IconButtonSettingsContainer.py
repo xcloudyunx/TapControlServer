@@ -7,7 +7,7 @@ from src.organisms.IconButtonSettings import IconButtonSettings
 from src.pages.RequiredDialogBox import RequiredDialogBox
 
 class IconButtonSettingsContainer(wx.Panel):    
-	def __init__(self, parent, className, id, numOfCols, onExitClick, onSaveIconButton, plugins, defaultValues):
+	def __init__(self, parent, page, rowIndex, colIndex, onExitClick, onSaveIconButton, plugins, defaultValues):
 		super().__init__(parent=parent)
 		
 		self.onSaveIconButton = onSaveIconButton
@@ -29,7 +29,7 @@ class IconButtonSettingsContainer(wx.Panel):
 		# title
 		title = Heading(
 			parent=self,
-			value="Page "+str(className)+", Row "+str(id//numOfCols+1)+", Col "+str(id%numOfCols+1),
+			value="Page "+page+", Row "+str(int(rowIndex)+1)+", Col "+str(int(colIndex)+1),
 		)
 		sizerTop.Add(title, wx.SizerFlags(20).Expand())
 		
@@ -57,7 +57,7 @@ class IconButtonSettingsContainer(wx.Panel):
 		# main element
 		self.iconButtonSettings = IconButtonSettings(
 			parent=self,
-			id=str(className)+"-"+str(id),
+			id=page+"-"+rowIndex+"-"+colIndex,
 			plugins=plugins,
 			defaultValues=defaultValues
 		)

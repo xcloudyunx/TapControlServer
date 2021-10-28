@@ -30,8 +30,9 @@ class MainFrame(wx.Frame):
 		self.state = state
 		
 		self.currentPage = 1
-		self.buttonClassName = None
-		self.buttonID = None
+		self.buttonPage = None
+		self.buttonRow = None
+		self.buttonCol = None
 		
 		# style
 		self.SetBackgroundColour(colors.black)
@@ -83,13 +84,15 @@ class MainFrame(wx.Frame):
 		
 	def renderSideBar(self):
 		self.sideBar.render(
-			className=self.buttonClassName,
-			id=self.buttonID
+			page=self.buttonPage,
+			rowIndex=self.buttonRow,
+			colIndex=self.buttonCol
 		)
 		
-	def handleIconButtonClick(self, page, id):
-		self.buttonClassName = page;
-		self.buttonID = id;
+	def handleIconButtonClick(self, page, row, col):
+		self.buttonPage = page
+		self.buttonRow = row
+		self.buttonCol = col
 		self.renderSideBar()
 		
 	def handlePageChange(self, pageNum):
@@ -99,7 +102,7 @@ class MainFrame(wx.Frame):
 			self.renderMainBar()
 	
 	def handleExitClick(self):
-		self.buttonClassName = 0
+		self.buttonPage = 0
 		self.renderSideBar()
 	
 	def handleCloseButton(self, evt):
@@ -120,7 +123,7 @@ class MainFrame(wx.Frame):
 			syncDialogBox.Update(100, "No client detected.")
 		
 	def handleSaveIconButton(self, info):
-		self.buttonClassName = 0
+		self.buttonPage = 0
 		self.render()
 		id = info.pop("id")
 		plugin = info.pop("name", None)

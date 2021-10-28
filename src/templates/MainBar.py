@@ -60,7 +60,7 @@ class MainBar(wx.Panel):
 			pass
 		self.grid = Grid(
 			parent=self,
-			className=currentPage,
+			page=str(currentPage),
 			numOfRows=self.state["numOfRows"],
 			numOfCols=self.state["numOfCols"],
 			onClick=self.onIconButtonClick

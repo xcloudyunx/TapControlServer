@@ -3,7 +3,7 @@ import wx
 from src.atoms.IconButton import IconButton
 
 class Row(wx.Panel):
-	def __init__(self, parent, id, className, numOfCols, buttonDim, onClick):
+	def __init__(self, parent, page, rowIndex, numOfCols, buttonDim, onClick):
 		super().__init__(parent=parent)
 		
 		sizer = wx.BoxSizer()
@@ -13,8 +13,9 @@ class Row(wx.Panel):
 		for j in range(numOfCols):
 			iconButton = IconButton(
 				parent=self,
-				id=id*numOfCols+j,
-				className=className,
+				page=page,
+				rowIndex=rowIndex,
+				colIndex=str(j),
 				buttonDim=buttonDim,
 				onClick=onClick
 			)

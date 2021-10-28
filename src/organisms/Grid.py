@@ -5,10 +5,8 @@ from config import colors
 from src.molecules.Row import Row
 
 class Grid(wx.Panel):
-	def __init__(self, parent, className, numOfRows, numOfCols, onClick):
+	def __init__(self, parent, page, numOfRows, numOfCols, onClick):
 		super().__init__(parent=parent)
-		
-		self.className = className
 		
 		buttonDim = min(
 			self.GetParent().GetSize().height/(numOfRows+1),
@@ -22,8 +20,8 @@ class Grid(wx.Panel):
 		for i in range(numOfRows):
 			row = Row(
 				parent=self,
-				id=i,
-				className=className,
+				page=page,
+				rowIndex=str(i),
 				numOfCols=numOfCols,
 				buttonDim=buttonDim,
 				onClick=onClick

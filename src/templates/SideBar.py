@@ -30,21 +30,21 @@ class SideBar(wx.Panel):
 		)
 		sizer.Add(self.gridSettings, wx.SizerFlags(1).Expand())
 	
-	def render(self, className, id):
+	def render(self, page, rowIndex, colIndex):
 		try:
 			self.element.Destroy()
 		except:
 			pass
-		if className:
+		if page:
 			self.element = IconButtonSettingsContainer(
 				parent=self,
-				className=className,
-				id=id,
-				numOfCols=self.state["numOfCols"],
+				page=page,
+				rowIndex=rowIndex,
+				colIndex=colIndex,
 				onExitClick=self.onExitClick,
 				onSaveIconButton=self.onSaveIconButton,
 				plugins=self.plugins,
-				defaultValues=self.commands[str(className)+"-"+str(id)] if str(className)+"-"+str(id) in self.commands else None
+				defaultValues=self.commands[page+"-"+rowIndex+"-"+colIndex] if page+"-"+rowIndex+"-"+colIndex in self.commands else None
 			)
 		else:
 			self.element = ConnectionArea(
