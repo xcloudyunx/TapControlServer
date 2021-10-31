@@ -32,11 +32,16 @@ class Server(threading.Thread):
 			print("accepted")
 			
 			# self.checkSync()
-
-			while c:
-				data = self.receiveMessage()
-				thread = threading.Thread(target=self.handleData, args=(data,))
-				thread.start()
+			
+			try:
+				while c:
+					data = self.receiveMessage()
+					if not data:
+						break
+					thread = threading.Thread(target=self.handleData, args=(data,))
+					thread.start()
+			except:
+				continue
 				
 	# def checkSync(self):
 		# self.sendMessage('{"hash":"'+self.hash(self.state)+'"}')
