@@ -3,6 +3,7 @@ import socket
 import json
 import hashlib
 import base64
+import time
 
 from config import constants
 
@@ -31,7 +32,7 @@ class Server(threading.Thread):
 			c = True
 			print("accepted")
 			
-			# self.checkSync()
+			self.checkSync()
 			
 			try:
 				while c:
@@ -43,16 +44,19 @@ class Server(threading.Thread):
 			except:
 				continue
 				
-	# def checkSync(self):
-		# self.sendMessage('{"hash":"'+self.hash(self.state)+'"}')
-		# synced = bool(self.receiveMessage())
-		# if not synced:
-			# handleSyncGrid(self.state)
+	def checkSync(self):
+		data = {"time":self.state["time"]}
+		self.sendMessage(json.dumps(data))
+		synced = bool(self.receiveMessage())
+		if synced:
+			self.handleSync()
+		else:
+			self.syncAll()
 			
 	def handleSync(self, syncDialogBox):
 		if self.conn:
 			with self.lock:
-				self.syncGrid()
+				self.syncState()
 				with open("config/updates.json", "r") as file:
 					data = json.loads(file.read())
 				percentageGain = 100/(len(data)+1)
@@ -70,9 +74,30 @@ class Server(threading.Thread):
 		else:
 			return False
 				
-	def syncGrid(self):
+	def syncState(self):
+		self.state["time"] = time.time()
+		with open("config/state.json", "w") as file:
+			file.write(json.dumps(self.state))
 		data = {"state":self.state}
 		self.sendMessage(json.dumps(data))
+	
+	def syncAll(self):
+		if self.conn:
+			with self.lock:
+				self.syncState()
+				percentageGain = 100/(len(self.commands)+1)
+				currentPercent = percentageGain
+				syncDialogBox.Update(currentPercent, "Syncing grid...")
+				currentPercent += percentageGain
+				for id in self.commands:
+					self.syncImage(id, True if os.path.exists("assets/"+id+".png") else False)
+					currentPercent += percentageGain
+				with open("config/updates.json", "w") as file:
+					file.write(json.dumps({}))
+			return True
+		else:
+			return False
+			
 		
 	def syncImage(self, fileName, updateImage):
 		data = {"imageName":fileName}
