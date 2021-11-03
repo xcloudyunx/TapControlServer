@@ -45,37 +45,37 @@ class Server(threading.Thread):
 				continue
 				
 	def checkSync(self):
-		data = {"time":self.state["time"]}
+		data = {"lastUpdateTime":self.state["lastUpdate"]}
 		self.sendMessage(json.dumps(data))
-		synced = bool(self.receiveMessage())
+		synced = bool(int(self.receiveMessage()))
 		if synced:
 			self.handleSync()
 		else:
 			self.syncAll()
 			
-	def handleSync(self, syncDialogBox):
+	# def handleSync(self, syncDialogBox):
+	def handleSync(self):
 		if self.conn:
 			with self.lock:
 				self.syncState()
 				with open("config/updates.json", "r") as file:
 					data = json.loads(file.read())
-				percentageGain = 100/(len(data)+1)
-				currentPercent = percentageGain
-				syncDialogBox.Update(currentPercent, "Syncing grid...")
-				currentPercent += percentageGain
+				# percentageGain = 100/(len(data)+1)
+				# currentPercent = percentageGain
+				# syncDialogBox.Update(currentPercent, "Syncing grid...")
+				# currentPercent += percentageGain
 				for image in data:
 					self.syncImage(image, data[image])
-					syncDialogBox.Update(currentPercent, "Syncing icons..." if currentPercent<100 else "Syncing complete")
-					currentPercent += percentageGain
+					# syncDialogBox.Update(currentPercent, "Syncing icons..." if currentPercent<100 else "Syncing complete")
+					# currentPercent += percentageGain
 				with open("config/updates.json", "w") as file:
-					file.write(json.dumps({}))
-					
-			return True
-		else:
-			return False
+					file.write(json.dumps({}))	
+			# return True
+		# else:
+			# return False
 				
 	def syncState(self):
-		self.state["time"] = time.time()
+		self.state["lastUpdate"] = time.time()
 		with open("config/state.json", "w") as file:
 			file.write(json.dumps(self.state))
 		data = {"state":self.state}
@@ -85,18 +85,19 @@ class Server(threading.Thread):
 		if self.conn:
 			with self.lock:
 				self.syncState()
-				percentageGain = 100/(len(self.commands)+1)
-				currentPercent = percentageGain
-				syncDialogBox.Update(currentPercent, "Syncing grid...")
-				currentPercent += percentageGain
+				# percentageGain = 100/(len(self.commands)+1)
+				# currentPercent = percentageGain
+				# syncDialogBox.Update(currentPercent, "Syncing grid...")
+				# currentPercent += percentageGain
 				for id in self.commands:
 					self.syncImage(id, True if os.path.exists("assets/"+id+".png") else False)
-					currentPercent += percentageGain
+					# syncDialogBox.Update(currentPercent, "Syncing icons..." if currentPercent<100 else "Syncing complete")
+					# currentPercent += percentageGain
 				with open("config/updates.json", "w") as file:
 					file.write(json.dumps({}))
-			return True
-		else:
-			return False
+			# return True
+		# else:
+			# return False
 			
 		
 	def syncImage(self, fileName, updateImage):
