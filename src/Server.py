@@ -89,10 +89,13 @@ class Server(threading.Thread):
 				# currentPercent = percentageGain
 				# syncDialogBox.Update(currentPercent, "Syncing grid...")
 				# currentPercent += percentageGain
-				for id in self.commands:
-					self.syncImage(id, True if os.path.exists("assets/"+id+".png") else False)
-					# syncDialogBox.Update(currentPercent, "Syncing icons..." if currentPercent<100 else "Syncing complete")
-					# currentPercent += percentageGain
+				for p in range(1, self.state["numOfPages"]+1):
+					for r in range(self.state["numOfRows"]):
+						for c in range(self.state["numOfCols"]):
+							id = str(p)+"-"+str(r)+"-"+str(c)
+							self.syncImage(id, True if os.path.exists("assets/"+id+".png") else False)
+							# syncDialogBox.Update(currentPercent, "Syncing icons..." if currentPercent<100 else "Syncing complete")
+							# currentPercent += percentageGain
 				with open("config/updates.json", "w") as file:
 					file.write(json.dumps({}))
 			# return True
