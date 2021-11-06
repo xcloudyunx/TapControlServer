@@ -10,7 +10,7 @@ from src.templates.SideBar import SideBar
 from src.pages.SyncDialogBox import SyncDialogBox
 
 class MainFrame(wx.Frame):    
-	def __init__(self, plugins, commands, state, onSync):
+	def __init__(self, plugins, commands, state, onSyncState, onSyncImage, onSyncAll):
 		super().__init__(
 			parent=None,
 			title="Tap Control",
@@ -21,7 +21,9 @@ class MainFrame(wx.Frame):
 		self.SetIcon(wx.Icon("assets/default.png"))
 		
 		self.plugins = plugins
-		self.onSync = onSync
+		self.onSyncState = onSyncState
+		self.onSyncImage = onSyncImage
+		self.onSyncAll = onSyncAll
 		
 		# commands 
 		self.commands = commands
@@ -54,7 +56,7 @@ class MainFrame(wx.Frame):
 			state=self.state,
 			plugins=self.plugins,
 			commands=self.commands,
-			onGridSettingsSave=self.handleGridSettingsSave,
+			onGridUpdate=self.handleGridUpdate,
 			onExitClick=self.handleExitClick,
 			onSaveIconButton=self.handleSaveIconButton,
 			onSyncButtonClick=self.handleSyncButtonClick
@@ -108,19 +110,19 @@ class MainFrame(wx.Frame):
 	def handleCloseButton(self, evt):
 		self.Hide()
 		
-	def handleGridSettingsSave(self):
+	def handleGridUpdate(self):
 		if (self.currentPage > self.state["numOfPages"]):
 			self.currentPage = self.state["numOfPages"]
 		self.renderMainBar()
-		with open("config/state.json", "w") as file:
-			file.write(json.dumps(self.state))
+		self.onSyncState()
 			
 	def handleSyncButtonClick(self):
 		# create dialog box saying syncing
-		syncDialogBox = SyncDialogBox()
-		success = self.onSync(syncDialogBox)
-		if not success:
-			syncDialogBox.Update(100, "No client detected.")
+		# syncDialogBox = SyncDialogBox()
+		# success = self.onSync(syncDialogBox)
+		# if not success:
+			# syncDialogBox.Update(100, "No client detected.")
+		pass
 		
 	def handleSaveIconButton(self, info):
 		self.buttonPage = 0

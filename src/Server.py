@@ -49,15 +49,15 @@ class Server(threading.Thread):
 		self.sendMessage(json.dumps(data))
 		synced = bool(int(self.receiveMessage()))
 		if synced:
-			self.handleSync()
+			self.syncUpdated()
 		else:
 			self.syncAll()
 			
 	# def handleSync(self, syncDialogBox):
-	def handleSync(self):
-		if self.conn:
-			with self.lock:
-				self.syncState()
+	def syncUpdated(self):
+		with self.lock:
+			self.syncState()
+			if self.conn:
 				with open("config/updates.json", "r") as file:
 					data = json.loads(file.read())
 				# percentageGain = 100/(len(data)+1)
@@ -78,13 +78,14 @@ class Server(threading.Thread):
 		self.state["lastUpdate"] = time.time()
 		with open("config/state.json", "w") as file:
 			file.write(json.dumps(self.state))
-		data = {"state":self.state}
-		self.sendMessage(json.dumps(data))
+		if self.conn:
+			data = {"state":self.state}
+			self.sendMessage(json.dumps(data))
 	
 	def syncAll(self):
-		if self.conn:
-			with self.lock:
-				self.syncState()
+		with self.lock:
+			self.syncState()
+			if self.conn:
 				# percentageGain = 100/(len(self.commands)+1)
 				# currentPercent = percentageGain
 				# syncDialogBox.Update(currentPercent, "Syncing grid...")

@@ -17,7 +17,9 @@ def main():
 		plugins=plugins,
 		commands=server.commands,
 		state=server.state,
-		onSync=server.handleSync
+		onSyncState=server.syncState,
+		onSyncImage=server.syncImage,
+		onSyncAll=server.syncAll
 	)
 
 if __name__ == "__main__":

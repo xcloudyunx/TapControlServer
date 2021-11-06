@@ -3,13 +3,15 @@ import wx
 
 from src.pages.MainFrame import MainFrame
 
-def startApp(plugins, commands, state, onSync):
+def startApp(plugins, commands, state, onSyncState, onSyncImage, onSyncAll):
 	app = wx.App()
 	frame = MainFrame(
 		plugins=plugins,
 		commands=commands,
 		state=state,
-		onSync=onSync
+		onSyncState=onSyncState,
+		onSyncImage=onSyncImage,
+		onSyncAll=onSyncAll
 	)
 	# wx.lib.inspection.InspectionTool().Show()
 	app.MainLoop()

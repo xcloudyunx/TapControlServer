@@ -7,10 +7,12 @@ from src.atoms.CustomButton import CustomButton
 from src.molecules.NumberInput import NumberInput
 
 class GridSettings(wx.Panel):    
-	def __init__(self, parent, state, onGridSettingsSave):
+	def __init__(self, parent, state, onGridUpdate):
 		super().__init__(parent=parent)
 		
 		self.state = state
+		
+		self.onGridUpdate = onGridUpdate
 		
 		self.SetBackgroundColour(colors.secondary)
 		
@@ -57,17 +59,6 @@ class GridSettings(wx.Panel):
 		#spacer
 		sizer.Add(0, 0, wx.SizerFlags(1))
 		
-		# sync button
-		saveButton = CustomButton(
-			parent=self,
-			value="Save",
-			onClick=lambda evt : onGridSettingsSave()
-		)
-		sizer.Add(saveButton, wx.SizerFlags(0).Centre())
-		
-		#spacer
-		sizer.Add(0, 0, wx.SizerFlags(1))
-		
 	def handleGridSettingsClick(self, type, val):
 		val = max(val, 1);
 		if type == "numOfRows":
@@ -79,3 +70,4 @@ class GridSettings(wx.Panel):
 		elif type == "numOfPages":
 			self.state["numOfPages"] = min(constants.pageMax, val)
 			self.p.render(self.state["numOfPages"])
+		self.onGridUpdate()

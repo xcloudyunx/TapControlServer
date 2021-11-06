@@ -7,7 +7,7 @@ from src.organisms.IconButtonSettingsContainer import IconButtonSettingsContaine
 from src.organisms.GridSettings import GridSettings
 
 class SideBar(wx.Panel):    
-	def __init__(self, parent, state, plugins, commands, onGridSettingsSave, onExitClick, onSaveIconButton, onSyncButtonClick):
+	def __init__(self, parent, state, plugins, commands, onGridUpdate, onExitClick, onSaveIconButton, onSyncButtonClick):
 		super().__init__(parent=parent)
 		
 		self.state = state
@@ -26,7 +26,7 @@ class SideBar(wx.Panel):
 		self.gridSettings = GridSettings(
 			parent=self,
 			state=state,
-			onGridSettingsSave=onGridSettingsSave
+			onGridUpdate=onGridUpdate
 		)
 		sizer.Add(self.gridSettings, wx.SizerFlags(1).Expand())
 	
