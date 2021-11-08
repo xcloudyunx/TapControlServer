@@ -17,8 +17,8 @@ def main():
 		plugins=plugins,
 		commands=server.commands,
 		state=server.state,
-		onSyncState=server.syncState,
-		onSyncImage=server.syncImage,
+		onSyncState=server.handleSyncState,
+		onSyncImage=server.handleSyncImage,
 		onSyncAll=server.syncAll
 	)
 

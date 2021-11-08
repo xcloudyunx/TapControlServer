@@ -55,9 +55,10 @@ class Server(threading.Thread):
 			
 	# def handleSync(self, syncDialogBox):
 	def syncUpdated(self):
+		self.handleSyncState()
 		with self.lock:
-			self.syncState()
 			if self.conn:
+				self.syncState()
 				with open("config/updates.json", "r") as file:
 					data = json.loads(file.read())
 				# percentageGain = 100/(len(data)+1)
@@ -73,18 +74,10 @@ class Server(threading.Thread):
 			# return True
 		# else:
 			# return False
-				
-	def syncState(self):
-		self.state["lastUpdate"] = time.time()
-		with open("config/state.json", "w") as file:
-			file.write(json.dumps(self.state))
-		if self.conn:
-			data = {"state":self.state}
-			self.sendMessage(json.dumps(data))
 	
 	def syncAll(self):
+		self.handleSyncState()
 		with self.lock:
-			self.syncState()
 			if self.conn:
 				# percentageGain = 100/(len(self.commands)+1)
 				# currentPercent = percentageGain
@@ -103,6 +96,23 @@ class Server(threading.Thread):
 		# else:
 			# return False
 			
+	def handleSyncState(self):
+		self.state["lastUpdate"] = time.time()
+		with open("config/state.json", "w") as file:
+			file.write(json.dumps(self.state))
+		with self.lock:
+			if self.conn:
+				self.syncState()
+	
+	def syncState(self):
+		data = {"state":self.state}
+		self.sendMessage(json.dumps(data))
+		
+	def handleSyncImage(self, fileName, updateImage):
+		self.handleSyncState()
+		with self.lock:
+			if self.conn:
+				self.syncImage(fileName, updateImage)
 		
 	def syncImage(self, fileName, updateImage):
 		data = {"imageName":fileName}
