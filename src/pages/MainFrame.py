@@ -135,3 +135,5 @@ class MainFrame(wx.Frame):
 			self.commands.pop(id, None)
 		with open("config/commands.json", "w") as file:
 			file.write(json.dumps(self.commands))
+		print(id)
+		self.onSyncImage(id)

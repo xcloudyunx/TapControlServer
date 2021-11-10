@@ -11,3 +11,5 @@ ADDRESS = (IP, PORT)
 
 iconButtonSize = 162
 iconButtonPadding = 0.9
+
+EOF = "XXXXXXXXX000000000"

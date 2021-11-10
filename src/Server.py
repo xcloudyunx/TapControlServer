@@ -4,6 +4,7 @@ import json
 import hashlib
 import base64
 import time
+import os
 
 from config import constants
 
@@ -12,6 +13,8 @@ class Server(threading.Thread):
 		super().__init__(daemon=True)
 		
 		self.lock = threading.Lock()
+		
+		self.readBuffer = ""
 		
 		self.plugins = plugins
 		with open("config/commands.json", "r") as file:
@@ -58,19 +61,18 @@ class Server(threading.Thread):
 		self.handleSyncState()
 		with self.lock:
 			if self.conn:
-				self.syncState()
 				with open("config/updates.json", "r") as file:
-					data = json.loads(file.read())
+					data = json.loads(file.read())["updates"]
 				# percentageGain = 100/(len(data)+1)
 				# currentPercent = percentageGain
 				# syncDialogBox.Update(currentPercent, "Syncing grid...")
 				# currentPercent += percentageGain
 				for image in data:
-					self.syncImage(image, data[image])
+					self.syncImage(image)
 					# syncDialogBox.Update(currentPercent, "Syncing icons..." if currentPercent<100 else "Syncing complete")
 					# currentPercent += percentageGain
 				with open("config/updates.json", "w") as file:
-					file.write(json.dumps({}))	
+					file.write(json.dumps({"updates":[]}))	
 			# return True
 		# else:
 			# return False
@@ -87,11 +89,11 @@ class Server(threading.Thread):
 					for r in range(self.state["numOfRows"]):
 						for c in range(self.state["numOfCols"]):
 							id = str(p)+"-"+str(r)+"-"+str(c)
-							self.syncImage(id, True if os.path.exists("assets/"+id+".png") else False)
+							self.syncImage(id)
 							# syncDialogBox.Update(currentPercent, "Syncing icons..." if currentPercent<100 else "Syncing complete")
 							# currentPercent += percentageGain
 				with open("config/updates.json", "w") as file:
-					file.write(json.dumps({}))
+					file.write(json.dumps({"updates":[]}))
 			# return True
 		# else:
 			# return False
@@ -108,16 +110,22 @@ class Server(threading.Thread):
 		data = {"state":self.state}
 		self.sendMessage(json.dumps(data))
 		
-	def handleSyncImage(self, fileName, updateImage):
+	def handleSyncImage(self, id):
 		self.handleSyncState()
 		with self.lock:
 			if self.conn:
-				self.syncImage(fileName, updateImage)
+				self.syncImage(id)
+			else:
+				with open("config/updates.json", "r") as file:
+					data = json.loads(file.read())
+				data["updates"].append(id)
+				with open("config/updates.json", "w") as file:
+					file.write(json.dumps(data))
 		
-	def syncImage(self, fileName, updateImage):
-		data = {"imageName":fileName}
-		if updateImage:
-			with open("assets/"+fileName+".png", "rb") as file:
+	def syncImage(self, id):
+		data = {"imageName":id}
+		if os.path.exists("assets/"+id+".png"):
+			with open("assets/"+id+".png", "rb") as file:
 				data["imageData"] = base64.b64encode(file.read()).decode()
 		else:
 			data["imageData"] = None
@@ -127,7 +135,7 @@ class Server(threading.Thread):
 		return self.conn.recv(constants.MSGSIZE).decode()
 		
 	def sendMessage(self, msg):
-		self.conn.send(msg.encode()+b"XXXXXX")
+		self.conn.send((msg+constants.EOF).encode())
 	
 	def hash(self, obj):
 		return hashlib.sha256(json.dumps(obj).encode()).hexdigest()
