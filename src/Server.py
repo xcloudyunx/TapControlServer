@@ -63,40 +63,33 @@ class Server(threading.Thread):
 			if self.conn:
 				with open("config/updates.json", "r") as file:
 					data = json.loads(file.read())["updates"]
-				# percentageGain = 100/(len(data)+1)
-				# currentPercent = percentageGain
-				# syncDialogBox.Update(currentPercent, "Syncing grid...")
-				# currentPercent += percentageGain
 				for image in data:
 					self.syncImage(image)
-					# syncDialogBox.Update(currentPercent, "Syncing icons..." if currentPercent<100 else "Syncing complete")
-					# currentPercent += percentageGain
 				with open("config/updates.json", "w") as file:
-					file.write(json.dumps({"updates":[]}))	
-			# return True
-		# else:
-			# return False
+					file.write(json.dumps({"updates":[]}))
 	
-	def syncAll(self):
+	def syncAll(self, syncDialogBox=None):
 		self.handleSyncState()
 		with self.lock:
 			if self.conn:
-				# percentageGain = 100/(len(self.commands)+1)
-				# currentPercent = percentageGain
-				# syncDialogBox.Update(currentPercent, "Syncing grid...")
-				# currentPercent += percentageGain
+				if syncDialogBox:
+					percentageGain = 100/(self.state["numOfPages"]*self.state["numOfRows"]*self.state["numOfCols"]+1)
+					currentPercent = percentageGain
+					syncDialogBox.Update(currentPercent, "Syncing grid...")
+					currentPercent += percentageGain
 				for p in range(1, self.state["numOfPages"]+1):
 					for r in range(self.state["numOfRows"]):
 						for c in range(self.state["numOfCols"]):
 							id = str(p)+"-"+str(r)+"-"+str(c)
 							self.syncImage(id)
-							# syncDialogBox.Update(currentPercent, "Syncing icons..." if currentPercent<100 else "Syncing complete")
-							# currentPercent += percentageGain
+							if syncDialogBox:
+								syncDialogBox.Update(currentPercent, "Syncing icons..." if currentPercent<100 else "Syncing complete")
+								currentPercent += percentageGain
 				with open("config/updates.json", "w") as file:
 					file.write(json.dumps({"updates":[]}))
-			# return True
-		# else:
-			# return False
+				return True
+			else:
+				return False
 			
 	def handleSyncState(self):
 		self.state["lastUpdate"] = time.time()

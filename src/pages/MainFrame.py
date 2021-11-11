@@ -118,11 +118,9 @@ class MainFrame(wx.Frame):
 			
 	def handleSyncButtonClick(self):
 		# create dialog box saying syncing
-		# syncDialogBox = SyncDialogBox()
-		# success = self.onSync(syncDialogBox)
-		# if not success:
-			# syncDialogBox.Update(100, "No client detected.")
-		pass
+		syncDialogBox = SyncDialogBox()
+		if not self.onSyncAll(syncDialogBox):
+			syncDialogBox.Update(100, "No client detected.")
 		
 	def handleSaveIconButton(self, info):
 		self.buttonPage = 0
@@ -135,5 +133,4 @@ class MainFrame(wx.Frame):
 			self.commands.pop(id, None)
 		with open("config/commands.json", "w") as file:
 			file.write(json.dumps(self.commands))
-		print(id)
 		self.onSyncImage(id)
