@@ -6,6 +6,7 @@ from config import constants
 
 from src.atoms.TextElement import TextElement
 from src.atoms.CustomButton import CustomButton
+from src.pages.PluginManager import PluginManager
 
 class ConnectionArea(wx.Panel):
 	def __init__(self, parent, onSyncButtonClick):
@@ -22,7 +23,7 @@ class ConnectionArea(wx.Panel):
 		pluginManagerButton = CustomButton(
 			parent=self,
 			value="Plugin Manager",
-			onClick=lambda evt : None
+			onClick=lambda evt : PluginManager(self)
 		)
 		sizer.Add(pluginManagerButton, wx.SizerFlags(0).Centre())
 		
