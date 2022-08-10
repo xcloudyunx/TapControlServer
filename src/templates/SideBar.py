@@ -49,7 +49,8 @@ class SideBar(wx.Panel):
 		else:
 			self.element = ConnectionArea(
 				parent=self,
-				onSyncButtonClick=self.onSyncButtonClick
+				onSyncButtonClick=self.onSyncButtonClick,
+				plugins=self.plugins
 			)
 		self.GetSizer().Insert(0, self.element, wx.SizerFlags(3).Expand())
 		self.GetSizer().Layout()

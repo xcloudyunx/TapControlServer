@@ -99,4 +99,5 @@ class IconButtonSettingsContainer(wx.Panel):
 			self.onSaveIconButton(info)
 		else:
 			# popup dialog saying to fill in all required fields
-			RequiredDialogBox(self)
+			with RequiredDialogBox(self) as dlg:
+				dlg.ShowModal()

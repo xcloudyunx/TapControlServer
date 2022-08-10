@@ -7,5 +7,3 @@ class RequiredDialogBox(wx.MessageDialog):
 			message="Please fill in all required fields.",
 			caption="Error"
 			)
-		
-		self.ShowModal()

@@ -9,8 +9,10 @@ from src.atoms.CustomButton import CustomButton
 from src.pages.PluginManager import PluginManager
 
 class ConnectionArea(wx.Panel):
-	def __init__(self, parent, onSyncButtonClick):
+	def __init__(self, parent, onSyncButtonClick, plugins):
 		super().__init__(parent=parent)
+		
+		self.plugins = plugins
 		
 		sizer = wx.BoxSizer(wx.VERTICAL)
 		self.SetSizer(sizer)
@@ -23,7 +25,7 @@ class ConnectionArea(wx.Panel):
 		pluginManagerButton = CustomButton(
 			parent=self,
 			value="Plugin Manager",
-			onClick=lambda evt : PluginManager(self)
+			onClick=lambda evt : self.managePluginManager()
 		)
 		sizer.Add(pluginManagerButton, wx.SizerFlags(0).Centre())
 		
@@ -49,3 +51,8 @@ class ConnectionArea(wx.Panel):
 		
 		
 		sizer.Add(0, 0, wx.SizerFlags(1))
+	
+	def managePluginManager(self):
+		with PluginManager(self, self.plugins) as dlg:
+			if dlg.ShowModal() == wx.ID_OK:
+				dlg.downloadPlugins()
