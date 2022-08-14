@@ -21,7 +21,7 @@ class PluginCheckListBox(wx.ListCtrl):
 		self.AppendColumn("Plugin")
 		self.AppendColumn("Version")
 		
-		for plugin in plugins:
-			self.Append([plugin, "Insert Version Number Here"])
+		for pluginInfo in plugins:
+			self.Append(pluginInfo[0:2])
 		
 		self.Hide()

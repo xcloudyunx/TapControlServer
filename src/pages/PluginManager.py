@@ -19,7 +19,6 @@ class PluginManager(wx.Dialog):
 		)
 		
 		self.plugins = plugins
-		self.installedPlugins = plugins.keys()
 		
 		self.readyPluginLists()
 		
@@ -28,46 +27,56 @@ class PluginManager(wx.Dialog):
 		
 		self.availablePluginsCheckListBox = PluginCheckListBox(
 			parent=self,
-			plugins=self.availablePlugins
+			plugins=self.availablePluginsInfo
 		)
-		self.availablePluginsCheckListBox.Show()
+		# self.availablePluginsCheckListBox.Show()
 		sizer.Add(self.availablePluginsCheckListBox, wx.SizerFlags(1).Expand())
 		
 		self.updatesPlguinsCheckListBox = PluginCheckListBox(
 			parent=self,
-			plugins=self.updatesPlugins
+			plugins=self.updatesPluginsInfo
 		)
+		# self.updatesPlguinsCheckListBox.Show()
 		sizer.Add(self.updatesPlguinsCheckListBox, wx.SizerFlags(1).Expand())
 		
 		self.installedPluginsCheckListBox = PluginCheckListBox(
 			parent=self,
-			plugins=self.installedPlugins
+			plugins=self.installedPluginsInfo
 		)
+		# self.updatesPlguinsCheckListBox.Show()
 		sizer.Add(self.installedPluginsCheckListBox, wx.SizerFlags(1).Expand())
 		
 	
 	def readyPluginLists(self):
 		self.readyAllPlugins()
+		self.readyInstalledPlugins()
 		
-		self.availablePlugins = []
-		self.updatesPlugins = []
+		self.availablePluginsInfo = []
+		self.updatesPluginsInfo = []
 		
-		for plugin in self.allPlugins:
-			if plugin not in self.installedPlugins:
-				self.availablePlugins.append(plugin)
-			# else if self.plugins[plugin].version != :
-				# self.updatesPlugins.append(plugin)
+		for ap in self.allPluginsInfo:
+			for ip in self.installedPluginsInfo:
+				if ap[0] == ip[0]:
+					if ap[1] != ip[1]:
+						self.updatesPluginsInfo.append(ap)
+					break
+			else:
+				self.availablePluginsInfo.append(ap)
 	
 	def readyAllPlugins(self):
-		# need to somehow also get version number
-		r = requests.get("https://api.github.com/repos/xcloudyunx/TapControlPlugins/git/trees/main")
+		r = requests.get("https://raw.githubusercontent.com/xcloudyunx/TapControlPlugins/main/pluginList.json")
 		res = r.json()
 		
-		self.allPlugins = []
+		self.allPluginsInfo = []
 		
-		for file in res["tree"]:
-			if file["type"] == "tree":
-				self.allPlugins.append(file["path"])
+		for plugin in res["plugins"]:
+			self.allPluginsInfo.append([plugin["name"], plugin["version"], plugin["description"], plugin["author"], plugin["homepage"]])
+				
+	def readyInstalledPlugins(self):
+		self.installedPluginsInfo = []
+		
+		for pluginName, plugin in self.plugins.items():
+			self.installedPluginsInfo.append([pluginName, plugin.getVersion(), plugin.getDescription(), plugin.getAuthor(), plugin.getHomepage()])
 	
 	# def downloadPlugin(self, pluginName):
 		# r = requests.get("https://raw.githubusercontent.com/xcloudyunx/TapControlPlugins/main/"+pluginName+"/plugin.py")
