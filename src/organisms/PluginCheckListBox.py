@@ -16,7 +16,6 @@ class PluginCheckListBox(wx.ListCtrl):
 		self.EnableCheckBoxes()
 		headerAttr = wx.ItemAttr()
 		headerAttr.SetFont(headerAttr.GetFont().Bold())
-		headerAttr.SetTextColour(colors.white)
 		self.SetHeaderAttr(headerAttr)
 		
 		self.AppendColumn("Plugin")
@@ -24,3 +23,5 @@ class PluginCheckListBox(wx.ListCtrl):
 		
 		for plugin in plugins:
 			self.Append([plugin, "Insert Version Number Here"])
+		
+		self.Hide()

@@ -18,32 +18,48 @@ class PluginManager(wx.Dialog):
 			title="Plugin Manager"
 		)
 		
+		self.plugins = plugins
+		self.installedPlugins = plugins.keys()
+		
+		self.readyPluginLists()
+		
 		sizer = wx.BoxSizer()
 		self.SetSizer(sizer)
 		
-		self.availablePlugins = PluginCheckListBox(
+		self.availablePluginsCheckListBox = PluginCheckListBox(
 			parent=self,
-			plugins=self.getAllPlugins()
+			plugins=self.availablePlugins
 		)
-		sizer.Add(self.availablePlugins, wx.SizerFlags(1).Expand().ReserveSpaceEvenIfHidden())
+		self.availablePluginsCheckListBox.Show()
+		sizer.Add(self.availablePluginsCheckListBox, wx.SizerFlags(1).Expand())
 		
-		# self.updatesPlguins = PluginCheckListBox(
-			# parent=self,
-			# plugins=self.getAllPlugins()
-		# )
-		# sizer.Add(self.updatesPlguins, wx.SizerFlags(1).Expand().ReserveSpaceEvenIfHidden())
+		self.updatesPlguinsCheckListBox = PluginCheckListBox(
+			parent=self,
+			plugins=self.updatesPlugins
+		)
+		sizer.Add(self.updatesPlguinsCheckListBox, wx.SizerFlags(1).Expand())
 		
-		# self.installedPlugins = PluginCheckListBox(
-			# parent=self,
-			# plugins=self.getInstalledPlugins()
-		# )
-		# sizer.Add(self.installedPlugins, wx.SizerFlags(1).Expand().ReserveSpaceEvenIfHidden())
+		self.installedPluginsCheckListBox = PluginCheckListBox(
+			parent=self,
+			plugins=self.installedPlugins
+		)
+		sizer.Add(self.installedPluginsCheckListBox, wx.SizerFlags(1).Expand())
 		
-		# self.installedPlugins = plugins
-		
-		# self.SetSelections(self.getInstalledPlugins())
 	
-	def getAllPlugins(self):
+	def readyPluginLists(self):
+		self.readyAllPlugins()
+		
+		self.availablePlugins = []
+		self.updatesPlugins = []
+		
+		for plugin in self.allPlugins:
+			if plugin not in self.installedPlugins:
+				self.availablePlugins.append(plugin)
+			# else if self.plugins[plugin].version != :
+				# self.updatesPlugins.append(plugin)
+	
+	def readyAllPlugins(self):
+		# need to somehow also get version number
 		r = requests.get("https://api.github.com/repos/xcloudyunx/TapControlPlugins/git/trees/main")
 		res = r.json()
 		
@@ -52,23 +68,6 @@ class PluginManager(wx.Dialog):
 		for file in res["tree"]:
 			if file["type"] == "tree":
 				self.allPlugins.append(file["path"])
-			
-		return self.allPlugins
-		
-	def getAvailablePlugins(self):
-		return []
-	
-	def getUpdatesPlugins(self):
-		return []
-	
-	def getInstalledPlugins(self):
-		self.selectedPlugins = []
-		for plugin in self.installedPlugins:
-			for i in range(len(self.allPlugins)):
-				if plugin == self.allPlugins[i]:
-					self.selectedPlugins.append(i)
-					break
-		return self.selectedPlugins
 	
 	# def downloadPlugin(self, pluginName):
 		# r = requests.get("https://raw.githubusercontent.com/xcloudyunx/TapControlPlugins/main/"+pluginName+"/plugin.py")
