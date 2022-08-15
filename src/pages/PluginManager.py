@@ -1,15 +1,9 @@
 import wx
 import requests
+import webbrowser
 
 from src.organisms.PluginCheckListBox import PluginCheckListBox
 from src.atoms.Plugin import Plugin
-
-# change self to be a normal dialog
-# have three different panels, one for available, one for updates, one for installed
-# can probably reuse code for each of the above panels - one template, use arg to see which i need
-# template will contain header to see which tab, search functionality, CheckListBox, description
-# figure out how to add an extra column to the checklistbox to display version
-# add a select all functionality?
 
 class PluginManager(wx.Dialog):
 	def __init__(self, parent, plugins):
@@ -22,29 +16,42 @@ class PluginManager(wx.Dialog):
 		
 		self.readyPluginLists()
 		
-		sizer = wx.BoxSizer()
+		self.currentTab = "available"
+		
+		sizer = wx.BoxSizer(wx.VERTICAL)
 		self.SetSizer(sizer)
 		
 		self.availablePluginsCheckListBox = PluginCheckListBox(
 			parent=self,
-			plugins=self.availablePluginsInfo
+			plugins=self.availablePluginsInfo,
+			onFocus=self.updateDescription
 		)
-		# self.availablePluginsCheckListBox.Show()
+		self.availablePluginsCheckListBox.Show()
 		sizer.Add(self.availablePluginsCheckListBox, wx.SizerFlags(1).Expand())
 		
-		self.updatesPlguinsCheckListBox = PluginCheckListBox(
-			parent=self,
-			plugins=self.updatesPluginsInfo
-		)
+		# self.updatesPlguinsCheckListBox = PluginCheckListBox(
+			# parent=self,
+			# plugins=self.updatesPluginsInfo,
+			# onFocus=self.updateDescription
+		# )
 		# self.updatesPlguinsCheckListBox.Show()
-		sizer.Add(self.updatesPlguinsCheckListBox, wx.SizerFlags(1).Expand())
+		# sizer.Add(self.updatesPlguinsCheckListBox, wx.SizerFlags(1).Expand())
 		
-		self.installedPluginsCheckListBox = PluginCheckListBox(
+		# self.installedPluginsCheckListBox = PluginCheckListBox(
+			# parent=self,
+			# plugins=self.installedPluginsInfo,
+			# onFocus=self.updateDescription
+		# )
+		# self.installedPluginsCheckListBox.Show()
+		# sizer.Add(self.installedPluginsCheckListBox, wx.SizerFlags(1).Expand())
+		
+		self.description = wx.TextCtrl(
 			parent=self,
-			plugins=self.installedPluginsInfo
+			style=wx.TE_MULTILINE|wx.TE_READONLY|wx.TE_AUTO_URL
 		)
-		# self.updatesPlguinsCheckListBox.Show()
-		sizer.Add(self.installedPluginsCheckListBox, wx.SizerFlags(1).Expand())
+		sizer.Add(self.description, wx.SizerFlags(1).Expand())
+		
+		self.description.Bind(wx.EVT_TEXT_URL, self.visitURL)
 		
 	
 	def readyPluginLists(self):
@@ -58,10 +65,10 @@ class PluginManager(wx.Dialog):
 			for ip in self.installedPluginsInfo:
 				if ap[0] == ip[0]:
 					if ap[1] != ip[1]:
-						self.updatesPluginsInfo.append(ap)
+						self.updatesPluginsInfo.append(ap[0:2])
 					break
 			else:
-				self.availablePluginsInfo.append(ap)
+				self.availablePluginsInfo.append(ap[0:2])
 	
 	def readyAllPlugins(self):
 		r = requests.get("https://raw.githubusercontent.com/xcloudyunx/TapControlPlugins/main/pluginList.json")
@@ -76,7 +83,18 @@ class PluginManager(wx.Dialog):
 		self.installedPluginsInfo = []
 		
 		for pluginName, plugin in self.plugins.items():
-			self.installedPluginsInfo.append([pluginName, plugin.getVersion(), plugin.getDescription(), plugin.getAuthor(), plugin.getHomepage()])
+			self.installedPluginsInfo.append([pluginName, plugin.getVersion()])
+	
+	def updateDescription(self, evt):
+		for plugin in self.allPluginsInfo:
+			if plugin[0] == evt.GetItem().GetText():
+				self.description.write(plugin[2]+"\r\n")
+				self.description.write("Author: "+plugin[3]+"\r\n")
+				self.description.write("Homepage: "+plugin[4])
+				
+	def visitURL(self, evt):
+		# currently triggers mutiple times for some reason???
+		webbrowser.open(self.description.GetValue()[evt.GetURLStart():evt.GetURLEnd()])
 	
 	# def downloadPlugin(self, pluginName):
 		# r = requests.get("https://raw.githubusercontent.com/xcloudyunx/TapControlPlugins/main/"+pluginName+"/plugin.py")

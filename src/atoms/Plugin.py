@@ -6,40 +6,19 @@ class Plugin():
 		self.file = file
 		
 		# remove the python when compiling as it will be exe
-		process = subprocess.Popen(["python", "./plugins/"+file, "--name"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		process = subprocess.Popen(["python", "./plugins/"+file, "--setup"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		out, err = process.communicate()
-		self.name = out.decode().strip()
+		outSplit = out.decode().splitlines()
 		
-		process = subprocess.Popen(["python", "./plugins/"+file, "--properties"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-		out, err = process.communicate()
-		self.properties = json.loads(out.decode().strip())
+		self.name = outSplit[0]
+		self.version = outSplit[1]
+		self.properties = json.loads(outSplit[2])
 		
 	def getName(self):
 		return self.name
 	
 	def getVersion(self):
-		process = subprocess.Popen(["python", "./plugins/"+file, "--version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-		out, err = process.communicate()
-		version = out.decode().strip()
-		return version
-		
-	def getDescription(self):
-		process = subprocess.Popen(["python", "./plugins/"+file, "--description"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-		out, err = process.communicate()
-		description = out.decode()
-		return description
-		
-	def getAuthor(self):
-		process = subprocess.Popen(["python", "./plugins/"+file, "--author"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-		out, err = process.communicate()
-		author = out.decode().strip()
-		return author
-	
-	def getHomepage(self):
-		process = subprocess.Popen(["python", "./plugins/"+file, "--homepage"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-		out, err = process.communicate()
-		homepage = out.decode().strip()
-		return homepage
+		return self.version
 		
 	def getProperties(self):
 		return self.properties

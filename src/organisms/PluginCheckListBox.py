@@ -3,7 +3,7 @@ import wx
 from config import colors
 
 class PluginCheckListBox(wx.ListCtrl):
-	def __init__(self, parent, plugins):
+	def __init__(self, parent, plugins, onFocus):
 		super().__init__(
 			parent=parent,
 			style=wx.LC_REPORT
@@ -22,6 +22,8 @@ class PluginCheckListBox(wx.ListCtrl):
 		self.AppendColumn("Version")
 		
 		for pluginInfo in plugins:
-			self.Append(pluginInfo[0:2])
+			self.Append(pluginInfo)
+			
+		self.Bind(wx.EVT_LIST_ITEM_FOCUSED, onFocus)
 		
 		self.Hide()
