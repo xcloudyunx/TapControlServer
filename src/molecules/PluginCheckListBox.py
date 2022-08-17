@@ -1,17 +1,11 @@
 import wx
 
-from config import colors
-
 class PluginCheckListBox(wx.ListCtrl):
 	def __init__(self, parent, plugins, onFocus):
 		super().__init__(
 			parent=parent,
 			style=wx.LC_REPORT
 		)
-		
-		#idx = self.FindItem(start=-1, str="searching for this string", partial=True) for searching
-		# need to trigger above for each character press and then do 
-		#self.Focus(idx) to highlight item
 		
 		self.EnableCheckBoxes()
 		headerAttr = wx.ItemAttr()
@@ -25,5 +19,3 @@ class PluginCheckListBox(wx.ListCtrl):
 			self.Append(pluginInfo)
 			
 		self.Bind(wx.EVT_LIST_ITEM_FOCUSED, onFocus)
-		
-		self.Hide()
