@@ -10,7 +10,8 @@ class PluginManager(wx.Dialog):
 	def __init__(self, parent, plugins):
 		super().__init__(
 			parent=parent,
-			title="Plugin Manager"
+			title="Plugin Manager",
+			size=wx.Size(500, 500)
 		)
 		
 		sizer = wx.BoxSizer(wx.VERTICAL)
@@ -46,8 +47,9 @@ class PluginManager(wx.Dialog):
 		self.description.write("Homepage: "+plugin[4])
 				
 	def visitURL(self, evt):
-		# currently triggers mutiple times for some reason???
-		webbrowser.open(self.description.GetValue()[evt.GetURLStart():evt.GetURLEnd()])
+		if evt.GetMouseEvent().LeftUp():
+			webbrowser.open(self.description.GetRange(evt.GetURLStart(), evt.GetURLEnd()))
+		evt.Skip()
 	
 	def handleClose(self, evt):
 		self.Destroy()
