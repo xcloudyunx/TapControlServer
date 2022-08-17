@@ -1,6 +1,7 @@
 import wx
 
 from src.molecules.PluginCheckListBox import PluginCheckListBox
+from src.molecules.SearchBar import SearchBar
 from src.atoms.CustomButton import CustomButton
 
 class PluginManagerNotebookPanel(wx.Panel):
@@ -18,17 +19,22 @@ class PluginManagerNotebookPanel(wx.Panel):
 		topLayer = wx.BoxSizer()
 		sizer.Add(topLayer, wx.SizerFlags(1).Expand())
 		
+		# idx = self.FindItem(start=-1, str="searching for this string", partial=True) for searching
+		# need to trigger above for each character press and then do 
+		# self.Focus(idx) to highlight item
+		
+		searchBar = SearchBar(
+			parent=self,
+			onSearch=self.handleSearch
+		)
+		topLayer.Add(searchBar, wx.SizerFlags().Expand())
+		
 		actionButton = CustomButton(
 			parent=self,
 			value=type,
 			onClick=self.onActionButtonClick
-			#onClick=self.onActionButtonClick
 		)
 		topLayer.Add(actionButton, wx.SizerFlags().Centre())
-		
-		# idx = self.FindItem(start=-1, str="searching for this string", partial=True) for searching
-		# need to trigger above for each character press and then do 
-		# self.Focus(idx) to highlight item
 		
 		self.checkListBox = PluginCheckListBox(
 			parent=self,
@@ -48,3 +54,13 @@ class PluginManagerNotebookPanel(wx.Panel):
 	
 	def addPluginToList(self, pluginInfo):
 		self.checkListBox.Append(pluginInfo)
+	
+	def handleSearch(self, text):
+		index = self.checkListBox.FindItem(
+			start=self.checkListBox.GetFocusedItem(),
+			str=text,
+			partial=True
+		)
+		if index != -1:
+			self.checkListBox.Select(index)
+			self.checkListBox.Focus(index)
