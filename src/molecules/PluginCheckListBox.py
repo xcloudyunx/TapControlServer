@@ -1,7 +1,7 @@
 import wx
 
 class PluginCheckListBox(wx.ListCtrl):
-	def __init__(self, parent, plugins, onFocus):
+	def __init__(self, parent, plugins, onPluginFocus):
 		super().__init__(
 			parent=parent,
 			style=wx.LC_REPORT
@@ -18,4 +18,4 @@ class PluginCheckListBox(wx.ListCtrl):
 		for pluginInfo in plugins:
 			self.Append(pluginInfo)
 			
-		self.Bind(wx.EVT_LIST_ITEM_FOCUSED, onFocus)
+		self.Bind(wx.EVT_LIST_ITEM_FOCUSED, onPluginFocus)

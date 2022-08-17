@@ -1,5 +1,6 @@
 import wx
 import requests
+import os
 
 from src.organisms.PluginManagerNotebookPanel import PluginManagerNotebookPanel
 from src.atoms.Plugin import Plugin
@@ -14,23 +15,32 @@ class PluginManagerNotebook(wx.Notebook):
 		
 		self.readyPluginLists()
 		
-		self.AddPage(PluginManagerNotebookPanel(
+		self.availablePage = PluginManagerNotebookPanel(
 			parent=self,
+			type="Install",
 			plugins=self.availablePluginsInfo,
-			onFocus=onPluginFocus
-		), "Available")
+			onPluginFocus=onPluginFocus,
+			handleActionButtonClick=self.installPlugin
+		)
+		self.AddPage(self.availablePage, "Available")
 		
-		self.AddPage(PluginManagerNotebookPanel(
+		self.updatesPage = PluginManagerNotebookPanel(
 			parent=self,
+			type="Update",
 			plugins=self.updatesPluginsInfo,
-			onFocus=onPluginFocus
-		), "Updates")
+			onPluginFocus=onPluginFocus,
+			handleActionButtonClick=self.updatePlugin
+		)
+		self.AddPage(self.updatesPage, "Updates")
 		
-		self.AddPage(PluginManagerNotebookPanel(
+		self.installedPage = PluginManagerNotebookPanel(
 			parent=self,
+			type="Remove",
 			plugins=self.installedPluginsInfo,
-			onFocus=onPluginFocus
-		), "Installed")
+			onPluginFocus=onPluginFocus,
+			handleActionButtonClick=self.removePlugin
+		)
+		self.AddPage(self.installedPage, "Installed")
 		
 	
 	def readyPluginLists(self):
@@ -50,13 +60,13 @@ class PluginManagerNotebook(wx.Notebook):
 				self.availablePluginsInfo.append(ap[0:2])
 	
 	def readyAllPlugins(self):
-		r = requests.get("https://raw.githubusercontent.com/xcloudyunx/TapControlPlugins/main/pluginList.json")
+		r = requests.get("https://raw.githubusercontent.com/xcloudyunx/TapControlPlugins/main/pluginList.json", headers={'Cache-Control': 'no-cache'})
 		res = r.json()
 		
 		self.allPluginsInfo = []
 		
 		for plugin in res["plugins"]:
-			self.allPluginsInfo.append([plugin["name"], plugin["version"], plugin["description"], plugin["author"], plugin["homepage"]])
+			self.allPluginsInfo.append([plugin["name"], plugin["version"], plugin["description"], plugin["author"], plugin["homepage"], plugin["file"]])
 				
 	def readyInstalledPlugins(self):
 		self.installedPluginsInfo = []
@@ -64,19 +74,36 @@ class PluginManagerNotebook(wx.Notebook):
 		for pluginName, plugin in self.plugins.items():
 			self.installedPluginsInfo.append([pluginName, plugin.getVersion()])
 			
-	def getAllPluginsInfo(self):
-		return self.allPluginsInfo
+	def getPlugin(self, pluginName):
+		for plugin in self.allPluginsInfo:
+			if (plugin[0] == pluginName):
+				return plugin
 	
-	# def downloadPlugin(self, pluginName):
-		# r = requests.get("https://raw.githubusercontent.com/xcloudyunx/TapControlPlugins/main/"+pluginName+"/plugin.py")
+	def downloadPlugin(self, pluginInfo):
+		r = requests.get(pluginInfo[5], headers={"Cache-Control": "no-cache"})
 		# r.content gives bytes, r.text gives string
-		# with open("plugins/"+pluginName+".py", "wb") as file:
-			# file.write(r.content)
+		with open("plugins/"+pluginInfo[0]+".py", "wb") as file:
+			file.write(r.content)
 		# need to update plugins list
-		# plugin = Plugin(pluginName+".py")
-		# self.installedPlugins[plugin.getName()] = plugin
+		plugin = Plugin(pluginInfo[0]+".py")
+		self.plugins[pluginInfo[0]] = plugin
+		
+		# need to update installedPlugins tab
+		self.installedPluginsInfo.append(pluginInfo[0:2])
+		self.installedPage.addPluginToList(pluginInfo[0:2])
 	
-	# def downloadPlugins(self):
-		# for i in self.GetSelections():
-			# if i not in self.selectedPlugins:
-				# self.downloadPlugin(self.allPlugins[i])
+	def installPlugin(self, index):
+		self.downloadPlugin(self.getPlugin(self.availablePluginsInfo.pop(index)[0]))
+			
+	def updatePlugin(self, index):
+		self.downloadPlugin(self.getPlugin(self.updatesPluginsInfo.pop(index)[0]))
+			
+	def removePlugin(self, index):
+		pluginInfo = self.installedPluginsInfo.pop(index)
+		self.plugins.pop(pluginInfo[0])
+		os.remove("plugins/"+pluginInfo[0]+".py")
+		
+		# need to update availablePlugins tab
+		self.availablePluginsInfo.append(pluginInfo)
+		self.availablePage.addPluginToList(pluginInfo)
+		

@@ -36,15 +36,14 @@ class PluginManager(wx.Dialog):
 			value="Close",
 			onClick=self.handleClose
 		)
-		sizer.Add(closeButton, wx.SizerFlags(1).Expand())
+		sizer.Add(closeButton, wx.SizerFlags().Centre())
 		
 	
 	def updateDescription(self, evt):
-		for plugin in self.pluginManagerNotebook.getAllPluginsInfo():
-			if plugin[0] == evt.GetItem().GetText():
-				self.description.write(plugin[2]+"\r\n")
-				self.description.write("Author: "+plugin[3]+"\r\n")
-				self.description.write("Homepage: "+plugin[4])
+		plugin = self.pluginManagerNotebook.getPlugin(evt.GetItem().GetText())
+		self.description.write(plugin[2]+"\r\n")
+		self.description.write("Author: "+plugin[3]+"\r\n")
+		self.description.write("Homepage: "+plugin[4])
 				
 	def visitURL(self, evt):
 		# currently triggers mutiple times for some reason???
