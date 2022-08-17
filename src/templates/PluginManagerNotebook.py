@@ -63,6 +63,9 @@ class PluginManagerNotebook(wx.Notebook):
 		
 		for pluginName, plugin in self.plugins.items():
 			self.installedPluginsInfo.append([pluginName, plugin.getVersion()])
+			
+	def getAllPluginsInfo(self):
+		return self.allPluginsInfo
 	
 	# def downloadPlugin(self, pluginName):
 		# r = requests.get("https://raw.githubusercontent.com/xcloudyunx/TapControlPlugins/main/"+pluginName+"/plugin.py")
