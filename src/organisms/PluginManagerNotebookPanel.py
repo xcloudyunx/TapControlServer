@@ -25,7 +25,7 @@ class PluginManagerNotebookPanel(wx.Panel):
 		
 		searchBar = SearchBar(
 			parent=self,
-			onSearch=self.handleSearch
+			handleSearch=self.handleSearch
 		)
 		topLayer.Add(searchBar, wx.SizerFlags().Expand())
 		
