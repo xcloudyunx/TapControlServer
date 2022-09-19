@@ -19,22 +19,24 @@ class PluginManagerNotebookPanel(wx.Panel):
 		topLayer = wx.BoxSizer()
 		sizer.Add(topLayer, wx.SizerFlags(1).Expand())
 		
-		# idx = self.FindItem(start=-1, str="searching for this string", partial=True) for searching
-		# need to trigger above for each character press and then do 
-		# self.Focus(idx) to highlight item
+		topLayer.Add(0, 0, 1)
 		
 		searchBar = SearchBar(
 			parent=self,
 			handleSearch=self.handleSearch
 		)
-		topLayer.Add(searchBar, wx.SizerFlags().Expand())
+		topLayer.Add(searchBar, wx.SizerFlags(1).Expand())
+		
+		topLayer.Add(0, 0, 3)
 		
 		actionButton = CustomButton(
 			parent=self,
 			value=type,
 			onClick=self.onActionButtonClick
 		)
-		topLayer.Add(actionButton, wx.SizerFlags().Centre())
+		topLayer.Add(actionButton, wx.SizerFlags(1).Centre())
+		
+		topLayer.Add(0, 0, 1)
 		
 		self.checkListBox = PluginCheckListBox(
 			parent=self,

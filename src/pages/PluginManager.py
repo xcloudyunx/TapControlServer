@@ -11,7 +11,7 @@ class PluginManager(wx.Dialog):
 		super().__init__(
 			parent=parent,
 			title="Plugin Manager",
-			size=wx.Size(500, 500)
+			size=wx.Size(600, 450)
 		)
 		
 		sizer = wx.BoxSizer(wx.VERTICAL)
@@ -22,7 +22,7 @@ class PluginManager(wx.Dialog):
 			plugins=plugins,
 			onPluginFocus=self.updateDescription
 		)
-		sizer.Add(self.pluginManagerNotebook, wx.SizerFlags(1).Expand())
+		sizer.Add(self.pluginManagerNotebook, wx.SizerFlags(3).Expand())
 		
 		self.description = wx.TextCtrl(
 			parent=self,
