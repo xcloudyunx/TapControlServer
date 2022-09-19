@@ -119,7 +119,7 @@ class MainFrame(wx.Frame):
 	def handleSyncButtonClick(self):
 		# create dialog box saying syncing
 		with SyncDialogBox(self.onSyncAll) as syncDialogBox:
-			syncDialogBox.ShowModal()
+			syncDialogBox.Show()
 		
 	def handleSaveIconButton(self, info):
 		self.buttonPage = 0
