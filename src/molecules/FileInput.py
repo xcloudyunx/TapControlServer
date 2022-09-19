@@ -1,37 +1,25 @@
 import wx
 
-from src.atoms.Label import Label
+from src.molecules.CustomBaseInput import CustomBaseInput
 
-class FileInput(wx.Panel):    
-	def __init__(self, parent, title, wildcard, onChangeFile, default=None, required=False):
-		super().__init__(parent=parent)
-		
-		sizer = wx.BoxSizer()
-		self.SetSizer(sizer)
-		
-		sizer.Add(0, 0, wx.SizerFlags(1).Expand())
-		
-		label = Label(
-			parent=self,
-			value=title+("*" if required else "")+":"
-		)
-		sizer.Add(label, wx.SizerFlags(6).Expand())
-		
-		self.filePicker = wx.FilePickerCtrl(
-			parent=self,
-			wildcard=wildcard,
-			size=wx.Size(1, 1)
-		)
+class FileInput(CustomBaseInput):    
+	def makeCtrl(self, settings):
 		# print(imageFilePicker.GetPath())
 		#imageFilePicker.SetInitialDirectory() # asset directory from plugins?
-		sizer.Add(self.filePicker, wx.SizerFlags(8).Expand())
-		if default:
-			self.filePicker.SetPath(default)
-			onChangeFile(title, default, True)
+		return wx.FilePickerCtrl(
+			parent=self,
+			wildcard=settings,
+			size=wx.Size(1, 1)
+		)
+	
+	def setDefault(self, default):
+		self.ctrl.SetPath(default)
+	
+	def getValue(self):
+		return self.ctrl.GetPath()
 		
-		sizer.Add(0, 0, wx.SizerFlags(1).Expand())
-		
-		self.filePicker.Bind(wx.EVT_FILEPICKER_CHANGED, lambda evt : onChangeFile(title, self.filePicker.GetPath()))
+	def getEvent(self):
+		return wx.EVT_FILEPICKER_CHANGED
 	
 	def reset(self):
-		self.filePicker.SetPath("")
+		self.ctrl.SetPath("")

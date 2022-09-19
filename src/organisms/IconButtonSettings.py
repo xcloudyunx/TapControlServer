@@ -8,6 +8,7 @@ from src.atoms.CustomButton import CustomButton
 from src.atoms.DummyIconButton import DummyIconButton
 from src.molecules.FileInput import FileInput
 from src.molecules.ChoiceInput import ChoiceInput
+from src.molecules.TextInput import TextInput
 
 class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):    
 	def __init__(self, parent, id, plugins, defaultValues):
@@ -66,8 +67,8 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 		self.imageFilePicker = FileInput(
 			parent=self,
 			title="Icon",
-			wildcard="Images (*.png,*.jpg)|*.png;*.jpg",
-			onChangeFile=lambda _, path : self.icon.update(path)
+			settings="Images (*.png,*.jpg)|*.png;*.jpg",
+			onChange=lambda _, path : self.icon.update(path)
 		)
 		self.sizerTop.Add(self.imageFilePicker, wx.SizerFlags(0).Expand())
 		
@@ -83,8 +84,8 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 		self.command = ChoiceInput(
 			parent=self,
 			title="Command",
-			choices=[""]+[plugin for plugin in self.plugins],
-			onChangeChoice=self.handleChangeCommand,
+			settings=[""]+[plugin for plugin in self.plugins],
+			onChange=self.handleChangeCommand,
 			default=defaultValues[0] if defaultValues else None
 		)
 		self.sizerTop.Add(self.command, wx.SizerFlags(0).Expand())
@@ -113,23 +114,19 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 				for property in plugin.getProperties():
 					propertyType = plugin.getPropertyType(property)
 					if propertyType == "choice":
-						userInput = ChoiceInput(
-							parent=self,
-							title=property,
-							choices=plugin.getPropertySettings(property),
-							onChangeChoice=self.handleChangeProperty,
-							default=(self.defaultValues[property] if property in self.defaultValues else None) if default else None,
-							required=plugin.isPropertyRequired(property)
-						)
+						userInput = ChoiceInput()
 					elif propertyType == "file":
-						userInput = FileInput(
-							parent=self,
-							title=property,
-							wildcard=plugin.getPropertySettings(property),
-							onChangeFile=self.handleChangeProperty,
-							default=(self.defaultValues[property] if property in self.defaultValues else None) if default else None,
-							required=plugin.isPropertyRequired(property)
-						)
+						userInput = FileInput()
+					elif propertyType == "text":
+						userInput = TextInput()
+					userInput.Create(
+						parent=self,
+						title=property,
+						settings=plugin.getPropertySettings(property),
+						onChange=self.handleChangeProperty,
+						default=(self.defaultValues[property] if property in self.defaultValues else None) if default else None,
+						required=plugin.isPropertyRequired(property)
+					)
 					self.sizerBottom.Add(userInput, wx.SizerFlags().Expand())
 								
 					# spacer

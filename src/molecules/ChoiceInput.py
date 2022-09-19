@@ -1,31 +1,19 @@
 import wx
 
-from src.atoms.Label import Label
+from src.molecules.CustomBaseInput import CustomBaseInput
 
-class ChoiceInput(wx.Panel):    
-	def __init__(self, parent, title, choices, onChangeChoice, default=None, required=False):
-		super().__init__(parent=parent)
-		
-		sizer = wx.BoxSizer()
-		self.SetSizer(sizer)
-		
-		sizer.Add(0, 0, wx.SizerFlags(1).Expand())
-		
-		label = Label(
+class ChoiceInput(CustomBaseInput):
+	def makeCtrl(self, settings):
+		return wx.Choice(
 			parent=self,
-			value=title+("*" if required else "")+":"
+			choices=settings
 		)
-		sizer.Add(label, wx.SizerFlags(6).Expand())
+	
+	def setDefault(self, default):
+		self.ctrl.SetSelection(self.ctrl.GetItems().index(default))
+	
+	def getValue(self):
+		return self.ctrl.GetString(self.ctrl.GetSelection())
 		
-		choice = wx.Choice(
-			parent=self,
-			choices=choices
-		)
-		sizer.Add(choice, wx.SizerFlags(8).Expand())
-		if default:
-			choice.SetSelection(choices.index(default))
-			onChangeChoice(title, default, True)
-		
-		sizer.Add(0, 0, wx.SizerFlags(1).Expand())
-		
-		choice.Bind(wx.EVT_CHOICE, lambda evt : onChangeChoice(title, choices[choice.GetSelection()]))
+	def getEvent(self):
+		return wx.EVT_CHOICE

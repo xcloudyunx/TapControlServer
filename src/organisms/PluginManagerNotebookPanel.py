@@ -56,6 +56,14 @@ class PluginManagerNotebookPanel(wx.Panel):
 	
 	def addPluginToList(self, pluginInfo):
 		self.checkListBox.Append(pluginInfo)
+		
+	def removePluginFromList(self, pluginName):
+		item = self.checkListBox.GetNextItem(-1)
+		while item != -1:
+			if self.checkListBox.GetItem(item).GetText() == pluginName:
+				self.checkListBox.DeleteItem(item)
+				break
+			item = self.checkListBox.GetNextItem(item)
 	
 	def handleSearch(self, text):
 		index = self.checkListBox.FindItem(

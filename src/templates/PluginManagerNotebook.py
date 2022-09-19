@@ -60,7 +60,7 @@ class PluginManagerNotebook(wx.Notebook):
 				self.availablePluginsInfo.append(ap[0:2])
 	
 	def readyAllPlugins(self):
-		r = requests.get("https://raw.githubusercontent.com/xcloudyunx/TapControlPlugins/main/pluginList.json", headers={'Cache-Control': 'no-cache'})
+		r = requests.get("https://raw.githubusercontent.com/xcloudyunx/TapControlPlugins/main/pluginList.json", headers={"Cache-Control": "no-store"})
 		res = r.json()
 		
 		self.allPluginsInfo = []
@@ -80,7 +80,7 @@ class PluginManagerNotebook(wx.Notebook):
 				return plugin
 	
 	def downloadPlugin(self, pluginInfo):
-		r = requests.get(pluginInfo[5], headers={"Cache-Control": "no-cache"})
+		r = requests.get(pluginInfo[5], headers={"Cache-Control": "no-store"})
 		# r.content gives bytes, r.text gives string
 		with open("plugins/"+pluginInfo[0]+".py", "wb") as file:
 			file.write(r.content)
@@ -96,7 +96,13 @@ class PluginManagerNotebook(wx.Notebook):
 		self.downloadPlugin(self.getPlugin(self.availablePluginsInfo.pop(index)[0]))
 			
 	def updatePlugin(self, index):
-		self.downloadPlugin(self.getPlugin(self.updatesPluginsInfo.pop(index)[0]))
+		pluginName = self.updatesPluginsInfo.pop(index)[0]
+		for plugin in self.installedPluginsInfo:
+			if plugin[0] == pluginName:
+				self.installedPluginsInfo.remove(plugin)
+				break
+		self.installedPage.removePluginFromList(pluginName)
+		self.downloadPlugin(self.getPlugin(pluginName))
 			
 	def removePlugin(self, index):
 		pluginInfo = self.installedPluginsInfo.pop(index)
