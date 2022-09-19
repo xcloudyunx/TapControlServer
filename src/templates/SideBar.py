@@ -2,9 +2,8 @@ import wx
 
 from config import colors
 
-from src.organisms.ConnectionArea import ConnectionArea
-from src.organisms.IconButtonSettingsContainer import IconButtonSettingsContainer
-from src.organisms.GridSettings import GridSettings
+from src.templates.SideBarPrimary import SideBarPrimary
+from src.templates.SideBarSecondary import SideBarSecondary
 
 class SideBar(wx.Panel):    
 	def __init__(self, parent, state, plugins, commands, onGridUpdate, onExitClick, onSaveIconButton, onSyncButtonClick):
@@ -17,18 +16,12 @@ class SideBar(wx.Panel):
 		self.onExitClick = onExitClick
 		self.onSaveIconButton = onSaveIconButton
 		self.onSyncButtonClick = onSyncButtonClick
+		self.onGridUpdate = onGridUpdate
 		
 		self.SetBackgroundColour(colors.primary)
 		
 		sizer = wx.BoxSizer(wx.VERTICAL)
 		self.SetSizer(sizer)
-		
-		self.gridSettings = GridSettings(
-			parent=self,
-			state=state,
-			onGridUpdate=onGridUpdate
-		)
-		sizer.Add(self.gridSettings, wx.SizerFlags(1).Expand())
 	
 	def render(self, page, rowIndex, colIndex):
 		try:
@@ -36,7 +29,7 @@ class SideBar(wx.Panel):
 		except:
 			pass
 		if page:
-			self.element = IconButtonSettingsContainer(
+			self.element = SideBarSecondary(
 				parent=self,
 				page=page,
 				rowIndex=rowIndex,
@@ -47,10 +40,12 @@ class SideBar(wx.Panel):
 				defaultValues=self.commands[page+"-"+rowIndex+"-"+colIndex] if page+"-"+rowIndex+"-"+colIndex in self.commands else None
 			)
 		else:
-			self.element = ConnectionArea(
+			self.element = SideBarPrimary(
 				parent=self,
 				onSyncButtonClick=self.onSyncButtonClick,
-				plugins=self.plugins
+				plugins=self.plugins,
+				onGridUpdate=self.onGridUpdate,
+				state=self.state
 			)
-		self.GetSizer().Insert(0, self.element, wx.SizerFlags(3).Expand())
+		self.GetSizer().Add(self.element, wx.SizerFlags(1).Expand())
 		self.GetSizer().Layout()

@@ -6,7 +6,7 @@ from src.atoms.Heading import Heading
 from src.organisms.IconButtonSettings import IconButtonSettings
 from src.pages.RequiredDialogBox import RequiredDialogBox
 
-class IconButtonSettingsContainer(wx.Panel):    
+class SideBarSecondary(wx.Panel):    
 	def __init__(self, parent, page, rowIndex, colIndex, onExitClick, onSaveIconButton, plugins, defaultValues):
 		super().__init__(parent=parent)
 		

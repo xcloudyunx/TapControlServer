@@ -26,7 +26,7 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 		self.SetSizer(mainSizer)
 		
 		self.sizerTop = wx.BoxSizer(wx.VERTICAL)
-		mainSizer.Add(self.sizerTop, wx.SizerFlags(2).Expand())
+		mainSizer.Add(self.sizerTop, wx.SizerFlags(1).Expand())
 		
 		# spacer
 		self.sizerTop.Add(0, 0, 1)
@@ -89,6 +89,8 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 		)
 		self.sizerTop.Add(self.command, wx.SizerFlags(0).Expand())
 		
+		self.sizerTop.Add(0, 0, 1)
+		
 		wx.CallAfter(self.afterInit)
 		
 	def afterInit(self):
@@ -106,7 +108,7 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 				plugin = self.plugins[pluginName]
 				
 				# spacer
-				self.sizerBottom.Add(0, 0, 1)
+				self.sizerBottom.Add(0, 5, 0)
 				
 				for property in plugin.getProperties():
 					propertyType = plugin.getPropertyType(property)
@@ -128,10 +130,10 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 							default=(self.defaultValues[property] if property in self.defaultValues else None) if default else None,
 							required=plugin.isPropertyRequired(property)
 						)
-					self.sizerBottom.Add(userInput, wx.SizerFlags(0).Expand())
+					self.sizerBottom.Add(userInput, wx.SizerFlags().Expand())
 								
 					# spacer
-					self.sizerBottom.Add(0, 0, 1)
+					self.sizerBottom.Add(0, 10, 0)
 				
 				self.sizerBottom.SetMinSize(wx.Size(self.sizerBottom.GetMinSize().width, self.sizerBottom.GetItem(1).GetSize().height*self.sizerBottom.GetItemCount()//2*1.5))
 				self.sizerBottom.GetStaticBox().Show()

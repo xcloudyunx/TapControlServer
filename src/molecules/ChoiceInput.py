@@ -13,7 +13,7 @@ class ChoiceInput(wx.Panel):
 		
 		label = Label(
 			parent=self,
-			value=("*" if required else "")+title+":"
+			value=title+("*" if required else "")+":"
 		)
 		sizer.Add(label, wx.SizerFlags(6).Expand())
 		
