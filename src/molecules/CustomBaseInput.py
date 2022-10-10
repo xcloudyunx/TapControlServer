@@ -15,22 +15,31 @@ class CustomBaseInput(wx.Panel):
 		sizer = wx.BoxSizer()
 		self.SetSizer(sizer)
 		
-		sizer.Add(0, 0, wx.SizerFlags(1).Expand())
+		sizer.Add(0, 0, 1)
 		
 		label = Label(
 			parent=self,
 			value=title+("*" if required else "")+":"
 		)
-		sizer.Add(label, wx.SizerFlags(6).Expand())
 		
 		self.ctrl = self.makeCtrl(settings)
-		sizer.Add(self.ctrl, wx.SizerFlags(8).Expand())
+		
+		multiLineSizer = wx.BoxSizer(wx.VERTICAL)
+		sizer.Add(multiLineSizer, wx.SizerFlags(14).Expand())
+		
+		multiLineSizer.Add(label, wx.SizerFlags(1).Expand())
+		multiLineSizer.Add(self.ctrl, wx.SizerFlags(1).Expand())
+		
 		if default:
 			self.setDefault(default)
 			onChange(title, default, True)
-		self.ctrl.Bind(self.getEvent(), lambda evt : onChange(title, self.getValue()))
+		self.ctrl.Bind(self.getEvent(), lambda evt : self.handleChange(onChange, title))
 		
 		sizer.Add(0, 0, 1)
+		
+	def handleChange(self, onChange, title):
+		if self.Validate():
+			onChange(title, self.getValue())
 	
 	def makeCtrl(self, _):
 		pass

@@ -23,3 +23,6 @@ class Label(wx.Panel):
 		if value:
 			self.value.SetLabel(str(value))
 			self.GetSizer().Layout()
+	
+	def getWidth(self):
+		return self.value.GetSize().GetWidth()

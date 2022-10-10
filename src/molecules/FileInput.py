@@ -1,4 +1,5 @@
 import wx
+import os
 
 from src.molecules.CustomBaseInput import CustomBaseInput
 
@@ -9,7 +10,8 @@ class FileInput(CustomBaseInput):
 		return wx.FilePickerCtrl(
 			parent=self,
 			wildcard=settings,
-			size=wx.Size(1, 1)
+			size=wx.Size(1, 1),
+			validator=Validator(settings)
 		)
 	
 	def setDefault(self, default):
@@ -23,3 +25,18 @@ class FileInput(CustomBaseInput):
 	
 	def reset(self):
 		self.ctrl.SetPath("")
+
+class Validator(wx.Validator):
+	def __init__(self, settings):
+		super().__init__()
+		self.settings = settings
+
+	def Clone(self):
+		return Validator(self.settings)
+
+	def Validate(self, _=None):
+		item = self.GetWindow()
+		path = item.GetPath()
+		if os.path.exists(path):
+			return True
+		return False

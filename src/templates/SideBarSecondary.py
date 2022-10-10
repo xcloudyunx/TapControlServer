@@ -49,7 +49,7 @@ class SideBarSecondary(wx.Panel):
 		
 		# sizer for centre elements
 		sizerCentre = wx.BoxSizer(wx.HORIZONTAL)
-		mainSizer.Add(sizerCentre, wx.SizerFlags(20).Expand())
+		mainSizer.Add(sizerCentre, wx.SizerFlags(40).Expand())
 		
 		# spacer
 		sizerCentre.Add(0, 0, 1)

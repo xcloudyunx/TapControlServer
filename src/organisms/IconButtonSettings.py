@@ -1,5 +1,4 @@
 import wx
-import wx.lib.scrolledpanel
 import json
 
 from config import colors
@@ -8,9 +7,9 @@ from src.atoms.CustomButton import CustomButton
 from src.atoms.DummyIconButton import DummyIconButton
 from src.molecules.FileInput import FileInput
 from src.molecules.ChoiceInput import ChoiceInput
-from src.molecules.TextInput import TextInput
-
-class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):    
+from src.organisms.PluginPropertiesSettings import PluginPropertiesSettings
+   
+class IconButtonSettings(wx.Panel):    
 	def __init__(self, parent, id, plugins, defaultValues):
 		super().__init__(parent=parent)
 		
@@ -18,18 +17,24 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 		
 		self.plugins = plugins
 		
+		self.pluginPropertiesSettings = None
+		
 		self.defaultValues = defaultValues[1] if defaultValues else None
 		
 		self.SetBackgroundColour(colors.secondary)
 		
 		# main sizer
-		mainSizer = wx.BoxSizer(wx.VERTICAL)
-		self.SetSizer(mainSizer)
+		self.mainSizer = wx.BoxSizer(wx.VERTICAL)
+		self.SetSizer(self.mainSizer)
 		
 		self.sizerTop = wx.BoxSizer(wx.VERTICAL)
-		mainSizer.Add(self.sizerTop, wx.SizerFlags(1).Expand())
+		self.mainSizer.Add(self.sizerTop, wx.SizerFlags(20).Expand())
 		
-		# spacer
+		self.mainSizer.Add(0, 0, 1)
+		
+		self.mainSizer.Add(0, 0, 19)
+		
+		# sizerTop
 		self.sizerTop.Add(0, 0, 1)
 		
 		# first row
@@ -75,11 +80,6 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 		# spacer
 		self.sizerTop.Add(0, 0, 1)
 		
-		# sizer to hold properties
-		self.sizerBottom = wx.StaticBoxSizer(wx.VERTICAL, self)
-		self.sizerBottom.GetStaticBox().Hide()
-		mainSizer.Add(self.sizerBottom, wx.SizerFlags(1).Expand().ReserveSpaceEvenIfHidden())
-		
 		# choose command
 		self.command = ChoiceInput(
 			parent=self,
@@ -90,55 +90,34 @@ class IconButtonSettings(wx.lib.scrolledpanel.ScrolledPanel):
 		)
 		self.sizerTop.Add(self.command, wx.SizerFlags(0).Expand())
 		
-		self.sizerTop.Add(0, 0, 1)
-		
-		wx.CallAfter(self.afterInit)
-		
-	def afterInit(self):
-		self.sizerTop.SetMinSize(wx.Size(self.sizerTop.GetMinSize().width, self.sizerTop.GetSize().height))
-		self.GetSizer().GetItem(self.sizerTop).SetProportion(0)
-		# self.GetSizer().GetItem(self.sizerBottom).SetProportion(0)
-		
 	def handleChangeCommand(self, title, pluginName, default=None):
 		if self.info["name"] != pluginName:
-			self.sizerBottom.Clear(True)
+			self.mainSizer.Remove(2)
+			try:
+				self.pluginPropertiesSettings.Destroy()
+				self.pluginPropertiesSettings = None
+			except:
+				pass
 			
 			self.info["name"] = pluginName
 			
 			if pluginName:
 				plugin = self.plugins[pluginName]
+					
+				self.pluginPropertiesSettings = PluginPropertiesSettings(
+					parent=self,
+					title=title,
+					plugin=plugin,
+					handleChangeProperty=self.handleChangeProperty,
+					defaultValues=self.defaultValues,
+					default=default
+				)
 				
-				# spacer
-				self.sizerBottom.Add(0, 5, 0)
-				
-				for property in plugin.getProperties():
-					propertyType = plugin.getPropertyType(property)
-					if propertyType == "choice":
-						userInput = ChoiceInput()
-					elif propertyType == "file":
-						userInput = FileInput()
-					elif propertyType == "text":
-						userInput = TextInput()
-					userInput.Create(
-						parent=self,
-						title=property,
-						settings=plugin.getPropertySettings(property),
-						onChange=self.handleChangeProperty,
-						default=(self.defaultValues[property] if property in self.defaultValues else None) if default else None,
-						required=plugin.isPropertyRequired(property)
-					)
-					self.sizerBottom.Add(userInput, wx.SizerFlags().Expand())
-								
-					# spacer
-					self.sizerBottom.Add(0, 10, 0)
-				
-				self.sizerBottom.SetMinSize(wx.Size(self.sizerBottom.GetMinSize().width, self.sizerBottom.GetItem(1).GetSize().height*self.sizerBottom.GetItemCount()//2*1.5))
-				self.sizerBottom.GetStaticBox().Show()
-				self.GetSizer().Layout()
-				self.SetupScrolling()
+				self.mainSizer.Add(self.pluginPropertiesSettings, wx.SizerFlags(19).Expand())
 			else:
-				self.sizerBottom.GetStaticBox().Hide()
-				self.GetSizer().Layout()
+				self.mainSizer.Add(0, 0, 19)
+			
+			self.mainSizer.Layout()
 		
 	def handleChangeProperty(self, property, propertyValue, _=None):
 		self.info[property] = propertyValue
