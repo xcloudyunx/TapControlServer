@@ -40,7 +40,7 @@ class DummyIconButton(wx.Panel):
 		return bmp
 		
 	def saveImage(self):
-		# with open("config/updates.json", "r") as file:
+		# with open("settings/updates.json", "r") as file:
 			# data = json.loads(file.read())
 		source = "assets/"+self.id+".png"
 		if self.source:
@@ -51,5 +51,5 @@ class DummyIconButton(wx.Panel):
 			if os.path.exists(source):
 				os.remove(source)
 				# data[self.id] = False
-		# with open("config/updates.json", "w") as file:
+		# with open("settings/updates.json", "w") as file:
 			# file.write(json.dumps(data))

@@ -130,6 +130,6 @@ class MainFrame(wx.Frame):
 			self.commands[id] = [plugin, info]
 		else:
 			self.commands.pop(id, None)
-		with open("config/commands.json", "w") as file:
+		with open("settings/commands.json", "w") as file:
 			file.write(json.dumps(self.commands))
 		self.onSyncImage(id)

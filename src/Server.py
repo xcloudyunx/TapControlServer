@@ -17,10 +17,10 @@ class Server(threading.Thread):
 		self.readBuffer = ""
 		
 		self.plugins = plugins
-		with open("config/commands.json", "r") as file:
+		with open("settings/commands.json", "r") as file:
 			self.commands = json.loads(file.read())
 			
-		with open("config/state.json", "r") as file:
+		with open("settings/state.json", "r") as file:
 			self.state = json.loads(file.read())
 		
 		self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -61,11 +61,11 @@ class Server(threading.Thread):
 		self.handleSyncState()
 		with self.lock:
 			if self.conn:
-				with open("config/updates.json", "r") as file:
+				with open("settings/updates.json", "r") as file:
 					data = json.loads(file.read())["updates"]
 				for image in data:
 					self.syncImage(image)
-				with open("config/updates.json", "w") as file:
+				with open("settings/updates.json", "w") as file:
 					file.write(json.dumps({"updates":[]}))
 	
 	def syncAll(self, syncDialogBox=None):
@@ -85,7 +85,7 @@ class Server(threading.Thread):
 							if syncDialogBox:
 								syncDialogBox.Update(currentPercent, "Syncing icons..." if currentPercent<100 else "Syncing complete")
 								currentPercent += percentageGain
-				with open("config/updates.json", "w") as file:
+				with open("settings/updates.json", "w") as file:
 					file.write(json.dumps({"updates":[]}))
 				return True
 			else:
@@ -93,7 +93,7 @@ class Server(threading.Thread):
 			
 	def handleSyncState(self):
 		self.state["lastUpdate"] = time.time()
-		with open("config/state.json", "w") as file:
+		with open("settings/state.json", "w") as file:
 			file.write(json.dumps(self.state))
 		with self.lock:
 			if self.conn:
@@ -109,10 +109,10 @@ class Server(threading.Thread):
 			if self.conn:
 				self.syncImage(id)
 			else:
-				with open("config/updates.json", "r") as file:
+				with open("settings/updates.json", "r") as file:
 					data = json.loads(file.read())
 				data["updates"].append(id)
-				with open("config/updates.json", "w") as file:
+				with open("settings/updates.json", "w") as file:
 					file.write(json.dumps(data))
 		
 	def syncImage(self, id):
